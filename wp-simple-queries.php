@@ -81,9 +81,9 @@ class Plugin
             __NAMESPACE__ . '\WP_Admin_Page'  => $libs . '/wp-admin-page.php',
             __NAMESPACE__ . '\WP_Admin_Forms' => $libs . '/wp-admin-forms.php',
 
-            __NAMESPACE__ . '\Simple_Queries_Public' => $include . '/abstract/simple-queries-public.php',
-            __NAMESPACE__ . '\Simple_Posts_Queries_Public' => $include . '/simple-posts-queries-public.php',
-            __NAMESPACE__ . '\Simple_Terms_Queries_Public' => $include . '/simple-terms-queries-public.php',
+            __NAMESPACE__ . '\Simple_Queries_Public' => $include . '/abstract/public.php',
+            __NAMESPACE__ . '\Simple_Posts_Queries_Public' => $include . '/posts-public.php',
+            __NAMESPACE__ . '\Simple_Terms_Queries_Public' => $include . '/terms-public.php',
         );
 
         foreach ($classes as $classname => $path) {
