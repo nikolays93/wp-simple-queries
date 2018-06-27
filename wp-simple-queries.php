@@ -33,17 +33,17 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
  * $pageslug . _form_method - Аттрибут method формы на странице настроек плагина
  *
  * wp-queries-post-type-list
- *  wp-queries-status-list
+ * wp-queries-status-list
  * wp-queries-order-by-postlist
  */
 
-namespace CDevelopers\Queries;
+namespace Nikolays93\Queries;
 
 if ( ! defined( 'ABSPATH' ) )
   exit; // disable direct access
 
 const PLUGIN_DIR = __DIR__;
-const DOMAIN = '_plugin';
+const DOMAIN = 'queries';
 
 // Нужно подключить заранее для активации и деактивации плагина @see activate(), uninstall();
 require __DIR__ . '/utils.php';
@@ -180,14 +180,14 @@ class Plugin
             'qOpt',
             array(
                 'nonce'     => '',
-                'shortcode' => Utils::get_shortcode_name(),
+                'shortcode' => Utils::get_shortcode_name( 'posts' ),
                 'types'     => Utils::get_post_type_list(),
                 'categories' => '',
                 'pages' => '',
                 'taxanomies' => '',
                 'terms' => '',
                 'statuses'  => Utils::get_status_list(),
-                'orderby'   => Utils::get_order_by_list(),
+                'orderby'   => Utils::get_order_by_postlist(),
                 ) );
     }
 }

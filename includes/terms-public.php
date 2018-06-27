@@ -5,7 +5,7 @@ namespace CDevelopers\Query;
 if ( ! defined( 'ABSPATH' ) )
 	exit; // disable direct access
 
-namespace CDevelopers\Queries;
+namespace Nikolays93\Queries;
 
 if ( ! defined( 'ABSPATH' ) )
     exit; // disable direct access

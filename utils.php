@@ -1,6 +1,6 @@
 <?php
 
-namespace CDevelopers\Queries;
+namespace Nikolays93\Queries;
 
 if ( ! defined( 'ABSPATH' ) )
   exit; // disable direct access
@@ -11,9 +11,14 @@ class Utils
     private function __construct() {}
     private function __clone() {}
 
-    public static function get_shortcode_name( $context )
+    public static function get_shortcode_name( $value = '', $context = '' )
     {
-        $value = $context;
+        if( !$value )
+            $value = 'posts';
+
+        if( !$context )
+            $context = $value;
+
         return apply_filters("get_{DOMAIN}_shortcode_name", $value, $context);
     }
 
