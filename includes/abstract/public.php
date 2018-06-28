@@ -92,13 +92,15 @@ abstract class Simple_Queries_Public
                     implode(' ', $classes)
                     );
 
-                if( current( $classes ) === 'container' && $atts['wrap_tag'] !== 'ul' ) {
+                if( in_array( current( $classes ), array('container', 'container-fluid') )
+                    && $atts['wrap_tag'] !== 'ul' ) {
                     $result .= '<div class="row">';
                 }
             break;
 
             case 'end':
-                if( current( $classes ) === 'container' && $atts['wrap_tag'] !== 'ul' ) {
+                if( in_array( current( $classes ), array('container', 'container-fluid') )
+                    && $atts['wrap_tag'] !== 'ul' ) {
                     $result.= '</div><!-- .row -->';
                 }
 
