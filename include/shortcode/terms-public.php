@@ -156,7 +156,7 @@ class Terms_Public extends Simple_Queries_Public
             // 'include'       => array(),
             'exclude'       => $instance['exclude'],
             // 'exclude_tree'  => array(),
-            'number'        => '',
+            'number'        => intval($instance['number']),
             // 'fields'        => 'all',
             // 'count'         => false,
             // 'slug'          => '',
@@ -174,6 +174,11 @@ class Terms_Public extends Simple_Queries_Public
             // 'update_term_meta_cache' => true,
             // 'meta_query'    => '',
         );
+
+        if( 0 < $args['number'] ) {
+            $args['hierarchical'] = 0;
+            $instance['hierarchical'] = 0;
+        }
 
         $terms = get_terms( $args );
         if ( ! is_wp_error( $terms ) ) {
