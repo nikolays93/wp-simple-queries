@@ -9,8 +9,9 @@ $data = array(
         'name'        => $args['widget']->get_field_name( 'orderby' ),
         'type'        => 'select',
         'options'      => array(
-            'name'       => __( 'Category Name', 'advanced-categories-widget' ),
-            'count'      => __( 'Post Count', 'advanced-categories-widget' ),
+            'id'         => __( 'ID', DOMAIN ),
+            'name'       => __( 'Category Name', DOMAIN ),
+            'count'      => __( 'Post Count', DOMAIN ),
             ),
         'label'       => __( 'Order by:', DOMAIN ),
         'input_class' => 'widefat',
