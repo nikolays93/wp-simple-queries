@@ -179,6 +179,9 @@ class Terms_Public extends Simple_Queries_Public
             $args['hierarchical'] = 0;
             $instance['hierarchical'] = 0;
         }
+        else {
+            unset($args['number']);
+        }
 
         $terms = get_terms( $args );
         if ( ! is_wp_error( $terms ) ) {
