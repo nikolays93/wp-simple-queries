@@ -102,8 +102,8 @@ class Plugin
         // add_action('widgets_init', array(__NAMESPACE__ . '\Posts_Widget', 'register_himself'));
         add_action('widgets_init', array(__NAMESPACE__ . '\Terms_Widget', 'register_himself'));
 
-        add_shortcode( Utils::get_posts_shortcode_name(), array(new Terms_Public(), 'shortcode') );
-        add_shortcode( Utils::get_terms_shortcode_name(), array(new Posts_Public(), 'shortcode') );
+        add_shortcode( Utils::get_posts_shortcode_name(), array(new Posts_Public(), 'shortcode') );
+        add_shortcode( Utils::get_terms_shortcode_name(), array(new Terms_Public(), 'shortcode') );
 
         add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueues' ) );
         add_action( 'customize_controls_enqueue_scripts', array( __CLASS__, 'admin_enqueues' ) );
