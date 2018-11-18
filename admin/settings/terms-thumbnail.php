@@ -1,8 +1,6 @@
 <?php
-namespace CDevelopers\Query\Terms;
 
-if ( ! defined( 'ABSPATH' ) )
-    exit; // disable direct access
+namespace NikolayS93\Queries;
 
 $data = array();
 $data[] = array(

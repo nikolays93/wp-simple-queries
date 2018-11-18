@@ -15,7 +15,7 @@ abstract class Simple_Queries_Public
     // static function query( $atts, $args, $custom_tpl );
    /* Данный метод должен быть определён в дочернем классе */
     abstract function sanitize_atts( $atts );
-    abstract function init( $atts = array(), $instance = array() );
+    abstract function shortcode( $atts = array(), $instance = array() );
 
     protected static function get_template( $template, $slug = false, $template_args = array(), $custom_tpl = true, $type = 'posts' )
     {

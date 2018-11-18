@@ -1,5 +1,6 @@
 <?php
-namespace CDevelopers\Query\Terms;
+
+namespace NikolayS93\Queries;
 
 $lorem = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus ex voluptatum quo ducimus suscipit facere vitae beatae placeat temporibus quod libero voluptas, architecto, consectetur magnam commodi eum, vel et! Hic!
 Numquam rerum, sunt rem officia similique, doloremque obcaecati. Assumenda non esse, magni inventore nulla veritatis vel, itaque eveniet qui veniam, sapiente velit voluptatum consequuntur dolorum quia animi accusamus recusandae ratione.

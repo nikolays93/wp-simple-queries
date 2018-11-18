@@ -1,201 +1,138 @@
 <?php
 
 /*
-Plugin Name: WP Simple Queries Shortcode and Widget
-Description:
-Plugin URI: http://#
-Version: 0.0.1
-Author: NikolayS93
-Author URI: https://vk.com/nikolays_93
-Author EMAIL: nikolayS93@ya.ru
-License: GNU General Public License v2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
-*/
-
-/**
- * Хуки плагина:
- * $pageslug . _after_title (default empty hook)
- * $pageslug . _before_form_inputs (default empty hook)
- * $pageslug . _inside_page_content
- * $pageslug . _inside_side_container
- * $pageslug . _inside_advanced_container
- * $pageslug . _after_form_inputs (default empty hook)
- * $pageslug . _after_page_wrap (default empty hook)
- *
- * Фильтры плагина:
- * "get_{DOMAIN}_option_name" - имя опции плагина
- * "get_{DOMAIN}_option" - значение опции плагина
- * "load_{DOMAIN}_file_if_exists" - информация полученная с файла
- * "get_{DOMAIN}_plugin_dir" - Дирректория плагина (доступ к файлам сервера)
- * "get_{DOMAIN}_plugin_url" - УРЛ плагина (доступ к внешним файлам)
- *
- * $pageslug . _form_action - Аттрибут action формы на странице настроек плагина
- * $pageslug . _form_method - Аттрибут method формы на странице настроек плагина
- *
- * wp-queries-post-type-list
- * wp-queries-status-list
- * wp-queries-order-by-postlist
+ * Plugin Name: WP Simple Queries Shortcode and Widget
+ * Plugin URI: https://github.com/nikolays93
+ * Description: 
+ * Version: 0.1.2
+ * Author: NikolayS93
+ * Author URI: https://vk.com/nikolays_93
+ * Author EMAIL: NikolayS93@ya.ru
+ * License: GNU General Public License v2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain: queries
+ * Domain Path: /languages/
  */
 
 namespace Nikolays93\Queries;
 
-if ( ! defined( 'ABSPATH' ) )
-  exit; // disable direct access
+use NikolayS93\WPAdminPage as Admin;
 
-const PLUGIN_DIR = __DIR__;
-const DOMAIN = 'queries';
+if ( !defined( 'ABSPATH' ) ) exit('You shall not pass');
 
-// Нужно подключить заранее для активации и деактивации плагина @see activate(), uninstall();
-require __DIR__ . '/utils.php';
+require_once ABSPATH . "wp-admin/includes/plugin.php";
+
+if (version_compare(PHP_VERSION, '5.3') < 0) {
+    throw new \Exception('Plugin requires PHP 5.3 or above');
+}
 
 class Plugin
 {
-    private static $initialized;
+    protected static $data;
+    protected static $options;
+
     private function __construct() {}
+    private function __clone() {}
 
-    static function activate() { add_option( Utils::get_option_name(), array() ); }
-    static function uninstall() { delete_option( Utils::get_option_name() ); }
-
-    public static function initialize()
+    /**
+     * Get option name for a options in the Wordpress database
+     */
+    public static function get_option_name()
     {
-        if( self::$initialized )
-            return false;
-
-        load_plugin_textdomain( DOMAIN, false, basename(PLUGIN_DIR) . '/languages/' );
-        self::include_required_files();
-        self::_actions();
-        self::_filters();
-
-        self::$initialized = true;
+        return apply_filters("get_{DOMAIN}_option_name", DOMAIN);
     }
 
     /**
-     * Подключение файлов нужных для работы плагина
+     * Define required plugin data
      */
-    private static function include_required_files()
+    public static function define()
     {
-        $include = Utils::get_plugin_dir('includes');
-        $libs    = Utils::get_plugin_dir('libs');
+        self::$data = get_plugin_data(__FILE__);
+
+        if( !defined(__NAMESPACE__ . '\DOMAIN') )
+            define(__NAMESPACE__ . '\DOMAIN', self::$data['TextDomain']);
+
+        if( !defined(__NAMESPACE__ . '\PLUGIN_DIR') )
+            define(__NAMESPACE__ . '\PLUGIN_DIR', __DIR__);
+    }
+
+    /**
+     * include required files
+     */
+    public static function initialize()
+    {
+        load_plugin_textdomain( DOMAIN, false, basename(PLUGIN_DIR) . '/languages/' );
+
+        require PLUGIN_DIR . '/include/utils.php';
+
+        $autoload = PLUGIN_DIR . '/vendor/autoload.php';
+        if( file_exists($autoload) ) include $autoload;
 
         $classes = array(
-            __NAMESPACE__ . '\WP_Admin_Page'  => $libs . '/wp-admin-page.php',
-            __NAMESPACE__ . '\WP_Admin_Forms' => $libs . '/wp-admin-forms.php',
+            'Simple_Queries_Public' => 'abstract/public.php',
 
-            __NAMESPACE__ . '\Simple_Queries_Public' => $include . '/abstract/public.php',
-            __NAMESPACE__ . '\Simple_Posts_Queries_Public' => $include . '/posts-public.php',
-            __NAMESPACE__ . '\Simple_Terms_Queries_Public' => $include . '/terms-public.php',
+            'Posts_Public' => 'shortcode/posts-public.php',
+            'Posts_MCE'    => 'shortcode/posts-mce.php',
+            'Terms_Public' => 'shortcode/terms-public.php',
+            // 'Posts_MCE'    => 'shortcode/terms-mce.php',
+            
+            // 'Posts_Widget' => 'widget/posts.php',
+            'Terms_Widget' => 'widget/terms.php',
         );
 
         foreach ($classes as $classname => $path) {
-            if( ! class_exists($classname) ) {
-                Utils::load_file_if_exists( $path );
-            }
-            else {
-                Utils::write_debug(__('Duplicate class ' . $classname, DOMAIN), __FILE__);
-            }
+            require PLUGIN_DIR . '/include/' . $path;
         }
 
-        // includes
-        // Utils::load_file_if_exists( $include . '/admin-settings-page.php' );
-        // Utils::load_file_if_exists( $include . '/public-queries.php' );
+        self::__actions();
     }
 
-    private static function _actions()
+    static function activate() { add_option( self::get_option_name(), array() ); }
+    static function uninstall() { delete_option( self::get_option_name() ); }
+
+    // public static function _admin_assets()
+    // {
+    // }
+
+    public static function __actions()
     {
-        add_action( 'admin_init', array( __CLASS__, 'init_mce_plugin' ), 20 );
-        add_action( 'admin_head', array( __CLASS__, 'enqueue_mce_script' ));
+        add_action( 'admin_init', array( __NAMESPACE__ . '\Posts_MCE', 'init_mce_plugin' ), 20 );
+        add_action( 'admin_head', array( __NAMESPACE__ . '\Posts_MCE', 'enqueue_mce_script' ));
 
-        // add_action('widgets_init',
-        //     array(__NAMESPACE__ . '\Simple_Terms_Queries_Widget', 'register_himself'));
-        // add_action('widgets_init',
-        //     array(__NAMESPACE__ . '\Simple_Posts_Queries_Widget', 'register_himself'));
+        // add_action('widgets_init', array(__NAMESPACE__ . '\Posts_Widget', 'register_himself'));
+        add_action('widgets_init', array(__NAMESPACE__ . '\Terms_Widget', 'register_himself'));
 
-        add_shortcode( Utils::get_shortcode_name( 'terms' ),
-            array(new Simple_Terms_Queries_Public(), 'init') );
-        add_shortcode( Utils::get_shortcode_name( 'posts' ),
-            array(new Simple_Posts_Queries_Public(), 'init') );
+        add_shortcode( Utils::get_posts_shortcode_name(), array(new Terms_Public(), 'shortcode') );
+        add_shortcode( Utils::get_terms_shortcode_name(), array(new Posts_Public(), 'shortcode') );
 
         add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueues' ) );
         add_action( 'customize_controls_enqueue_scripts', array( __CLASS__, 'admin_enqueues' ) );
     }
 
-    private static function _filters(){}
-
-    /**
-     * Подключаем нужные скрипты
-     */
-    public static function admin_enqueues( $hook )
+    static function admin_enqueues( $hook )
     {
         global $pagenow;
 
-        $enqueue = false;
-        if( 'customize.php' == $pagenow || 'widgets.php' == $pagenow || 'widgets.php' == $hook ){
-            $enqueue = true;
-        };
-
         wp_enqueue_style(
             'widget-panels',
-            Utils::get_plugin_url('assets/widget-panels.css'),
+            Utils::get_plugin_url('/admin/assets/widget-panels.css'),
             array(),
             '1.0.0',
             'all'
         );
 
-        if( ! $enqueue ){
-            return;
+        if( 'customize.php' == $pagenow || 'widgets.php' == $pagenow || 'widgets.php' == $hook ) {
+            wp_enqueue_script( 'widget-panels', Utils::get_plugin_url('/admin/assets/widget-panels.js'), array( 'jquery' ), '', true );
+
+            #wp_enqueue_script( 'admin-scripts', self::get_plugin_url() . 'js/admin.js', array( 'widget-panels' ), '', true );
         };
-
-        wp_enqueue_script( 'widget-panels', Utils::get_plugin_url('assets/widget-panels.js'), array( 'jquery' ), '', true );
-
-        #wp_enqueue_script( 'acatw-admin-scripts', self::get_plugin_url() . 'js/admin.js', array( 'widget-panels' ), '', true );
-    }
-
-    static function init_mce_plugin()
-    {
-        /** MCE Editor */
-        if ( !current_user_can('edit_posts') && !current_user_can('edit_pages') ) {
-            return;
-        }
-
-        add_filter("mce_external_plugins", function( $plugin_array ) {
-            $plugin_array['query_shortcode'] = Utils::get_plugin_url( '/js/query_button.js' );
-            return $plugin_array;
-        });
-
-        add_filter("mce_buttons", function( $buttons ) {
-            $buttons[] = 'query_shortcode';
-            return $buttons;
-        });
-    }
-
-    static function enqueue_mce_script()
-    {
-        if ( ! isset( get_current_screen()->id ) || get_current_screen()->base != 'post' ) {
-            return;
-        }
-
-        wp_enqueue_script( 'query_shortcode', Utils::get_plugin_url('/js/query_shortcode.js'),
-            array( 'shortcode', 'wp-util', 'jquery' ), false, true );
-        wp_localize_script( 'query_shortcode',
-            'qOpt',
-            array(
-                'nonce'     => '',
-                'shortcode' => Utils::get_shortcode_name( 'posts' ),
-                'types'     => Utils::get_post_type_list(),
-                'categories' => '',
-                'pages' => '',
-                'taxanomies' => '',
-                'terms' => '',
-                'statuses'  => Utils::get_status_list(),
-                'orderby'   => Utils::get_order_by_postlist(),
-                ) );
     }
 }
 
+Plugin::define();
 
-
-register_activation_hook( __FILE__, array( __NAMESPACE__ . '\Plugin', 'activate' ) );
-register_uninstall_hook( __FILE__, array( __NAMESPACE__ . '\Plugin', 'uninstall' ) );
+// register_activation_hook( __FILE__, array( __NAMESPACE__ . '\Plugin', 'activate' ) );
+// register_uninstall_hook( __FILE__, array( __NAMESPACE__ . '\Plugin', 'uninstall' ) );
 // register_deactivation_hook( __FILE__, array( __NAMESPACE__ . '\Plugin', 'deactivate' ) );
 
 add_action( 'plugins_loaded', array( __NAMESPACE__ . '\Plugin', 'initialize' ), 10 );
