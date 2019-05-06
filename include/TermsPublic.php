@@ -1,18 +1,20 @@
 <?php
 
-namespace Nikolays93\Queries;
+namespace NikolayS93\Queries;
+
+use NikolayS93\Queries\Types\Shortcode;
 
 if ( ! defined( 'ABSPATH' ) ) exit; // disable direct access
 
-class Terms_Public extends Simple_Queries_Public
+class TermsPublic // extends Shortcode
 {
-    static function _defaults()
+    private static function __defaults()
     {
         $defaults = array(
             'id'            => false,
 
             'taxonomy'      => 'category',
-            'orderby'       => 'id',
+            'orderby'       => 'name',
             'order'         => 'ASC',
             'hide_empty'    => true,
 
@@ -20,7 +22,7 @@ class Terms_Public extends Simple_Queries_Public
             'exclude'       => array(),
             'exclude_tree'  => array(),
 
-            'number'        => '', // max
+            'number'        => -1, // max
 
             'slug'          => '',
             'parent'        => '', // только прямые потомки
@@ -39,18 +41,85 @@ class Terms_Public extends Simple_Queries_Public
 
             'columns'   => '4', // 1 | 2 | 3 | 4 | 10 | 12
             'template'  => '',
+
+            // 'show_thumb'     => 0,
+            // 'thumb_size'     => 0,
+            // 'thumb_size_w'   => 55,
+            // 'thumb_size_h'   => 55,
+            'show_desc'      => 0,
+            'desc_length'    => 15,
+            'list_style'     => 'ul',
+            'show_count'     => 0,
+            'show_empty'    => false,
         );
 
         return apply_filters( 'wp-simple-queries-posts-defaults', $defaults );
     }
 
-    function sanitize_atts( $atts ) {}
-    function get_query_args() {}
-    public static function query( $atts, $args, $custom_tpl ) {}
-    function shortcode( $atts = array(), $instance = array() ) {}
+    public static function __shortcodeName()
+    {
+        $shortcode = 'terms';
+
+        return apply_filters( "get_{DOMAIN}_terms_shortcode_name", $shortcode );
+    }
+
+    function sanitizeShortcodeAtts( $atts )
+    {
+        return $atts;
+    }
+
+    function getContainerClasses()
+    {
+        $classes = array();
+        $classes[] = 'st-widget';
+        $classes[] = 'st-wrap';
+
+        return array_filter( array_map('esc_attr', $classes) );
+    }
+
+    function getContainerPart($part, $containerClasses = '')
+    {
+        switch ($part) {
+            case 'start':
+                echo '<div class="'. implode(' ', $containerClasses) .'">';
+                break;
+
+            case 'end':
+                echo '</div><!-- /.'. implode('.', $containerClasses) .' -->';
+                break;
+        }
+
+        return '';
+    }
+
+    function shortcode( $atts = array() )
+    {
+        $this->atts = $this->sanitizeShortcodeAtts( $atts );
+
+        /**
+         * Wordpress builtin parse with escape and shortcode filter
+         */
+        $atts = shortcode_atts( static::__defaults(), $atts, static::__shortcodeName() );
+
+        $categories = static::getCategories( $atts );
+
+        $containerClasses = $this->getContainerClasses();
+
+        ob_start();
+        $this->getContainerPart('start', $containerClasses);
+
+        if( ! empty( $categories ) ) {
+            self::recursive_list_item( $categories, $atts );
+        }
+
+        $this->getContainerPart('end', $containerClasses);
+
+        return ob_get_clean();
+    }
+
     public static function widget( $widget, $title, $instance, $args )
     {
-        $categories = self::get_categories( $instance );
+        $categories = static::getCategories( $instance );
 
         echo $args['before_widget'];
 
@@ -68,35 +137,55 @@ class Terms_Public extends Simple_Queries_Public
         echo $args['after_widget'];
     }
 
-    public static function recursive_list_item( $categories, $instance, $level = 0 ) {
+    public static function recursive_list_item( $categories, $instance, $level = 0 )
+    {
+
+        /**
+         * at 1 level
+         */
+        $level++;
+
+        /**
+         * Sanitize tag list wrapper
+         */
         if( ! in_array($instance['list_style'], array('div', 'ol', 'ul')) ) {
             $instance['list_style'] = 'ul';
         }
 
+        /**
+         * Sanitize tag list item
+         */
         if( 'div' !== ($list_item = $instance['list_style']) ) {
             $list_item = 'li';
         }
 
-        $_start = sprintf( '<%s class="simple-terms-list level-%d">',
+        do_action('TermsPublic::before_start_list', $level);
+
+        /**
+         * Open list wrapper
+         */
+        printf( '<%s class="simple-terms-list level-%d">',
             esc_html($instance['list_style']),
-            intval($level)
-            );
+            $level
+        );
 
-        echo apply_filters( 'stqt_start_list', $_start, $instance, $categories, $level );
+        do_action('TermsPublic::after_start_list', $level);
 
-        $level++;
-        foreach( $categories as $term_id => $arrItem ) {
-            if( empty($arrItem->term_id) )
-                continue;
 
-            $item_id    = self::get_item_id( $arrItem, $instance );
-            $item_class = self::get_item_class( $arrItem, $instance );
+        /**
+         * Each all categories in level
+         */
+        foreach( $categories as $obTerm )
+        {
+            if( empty($obTerm->term_id) ) continue;
 
-            // open list item
-            printf( '<%s id="%s" class="%s">',
-                esc_html($list_item),
-                esc_attr($item_id),
-                esc_attr($item_class) );
+            $item_id    = self::get_item_id( $obTerm, $instance );
+            $item_class = self::get_item_class( $obTerm, $instance );
+
+            /**
+             * Open list item
+             */
+            printf( '<%s id="%s" class="%s">', esc_html($list_item), esc_attr($item_id), esc_attr($item_class) );
 
 
             // $args = wp_parse_args( $instance, array(
@@ -107,17 +196,15 @@ class Terms_Public extends Simple_Queries_Public
             //       $args['show_thumb'] = ''; // $instance['show_thumb'] ?
                 // self::the_item_thumbnail_div( $term, $instance, false ) : '';
 
-                  $args['show_count'] = ''; // $instance['show_count'] ?
-            //           " <small class='count'>( {$term->count} )</small>" : '';
+            $args['show_count'] = $instance['show_count'] ? '<small class="count">(<span>'. $obTerm->count .'</span>)</small>' : '';
 
-            $result = array();
             // $result[] = sprintf('<div id="%s" class="%s">', $args['item_id'], $args['item_class']);
             // $result[] = $args['show_thumb'];
-            $result[] = sprintf( '<a href="%s" rel="bookmark">%s</a>%s',
-                esc_url( get_term_link( $arrItem ) ),
-                $arrItem->name,
-                $args['show_count'] ? " ( {$args['show_count']} )" : ''
-                );
+            printf( '<a href="%s" rel="bookmark">%s</a>%s',
+                esc_url( get_term_link( $obTerm ) ),
+                $obTerm->name,
+                $args['show_count']
+            );
 
             // if( $args['show_desc'] ) {
             //  $result[] = '<span class="term-description">';
@@ -127,24 +214,29 @@ class Terms_Public extends Simple_Queries_Public
 
             // $result[] = "</div>";
 
-            echo implode("\n", $result);
 
-                if( !empty($arrItem->children) ) {
-                    /** recursive */
-                    self::recursive_list_item( $arrItem->children, $instance, $level );
-                }
-                else {
-                    $level = 0;
-                }
+            if( !empty($obTerm->children) ) {
+                /** @recursive */
+                self::recursive_list_item( $obTerm->children, $instance, $level );
+            }
+            // else {
+            //     $level = 0;
+            // }
 
-            // close list item
+            /**
+             * Close list item
+             */
             printf( '</%s>', esc_html($list_item) );
         }
 
+        do_action('TermsPublic::before_end_list', $level);
+
         printf( '</%s>', esc_html($instance['list_style']) );
+
+        do_action('TermsPublic::after_end_list', $level);
     }
 
-    public static function get_categories( $instance )
+    public static function getCategories( $instance )
     {
         $result = array();
         $args = array(
@@ -184,6 +276,7 @@ class Terms_Public extends Simple_Queries_Public
         }
 
         $terms = get_terms( $args );
+
         if ( ! is_wp_error( $terms ) ) {
             if( $instance['hierarchical'] ) {
                 Utils::sort_terms_hierarchicaly($terms, $result);
@@ -199,10 +292,10 @@ class Terms_Public extends Simple_Queries_Public
     }
 
 
-       private static function get_item_id( $term = 0, $instance = array() )
+    private static function get_item_id( $term = 0, $instance = array() )
     {
 
-        return ( !empty($term->term_id) ) ? $instance['widget_id'] . '-term-' . $term->term_id : '';
+        return ( !empty($term->term_id) ) ? $instance['taxonomy'] . '-term-' . $term->term_id : '';
     }
 
     private static function get_item_class( $term = 0, $instance = array() )

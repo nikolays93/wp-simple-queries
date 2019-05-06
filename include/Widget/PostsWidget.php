@@ -1,10 +1,10 @@
 <?php
 
-namespace Nikolays93\Queries;
+namespace NikolayS93\Queries;
 
 if ( ! defined( 'ABSPATH' ) ) exit; // disable direct access
 
-class Posts_Widget extends \WP_Widget
+class PostsWidget extends \WP_Widget
 {
 	/**
 	 * Set global widget options
@@ -17,7 +17,7 @@ class Posts_Widget extends \WP_Widget
 			__( 'Simple Posts Queries' ),      // $this->name
 			array(                             // $this->widget_options
 				'classname'                   => $this->alt_option_name,
-				'description'                 => __( '' ),
+				'description'                 => '',
 				'customize_selective_refresh' => true,
 			),
 			array()                            // $this->control_options

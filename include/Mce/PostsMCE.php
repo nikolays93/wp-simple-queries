@@ -1,6 +1,6 @@
 <?php
 
-namespace Nikolays93\Queries;
+namespace NikolayS93\Queries;
 
 class Posts_MCE
 {

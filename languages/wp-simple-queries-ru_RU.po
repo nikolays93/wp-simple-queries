@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: plugin\n"
-"POT-Creation-Date: 2017-10-18 12:41+0400\n"
-"PO-Revision-Date: 2017-10-27 10:17+0400\n"
+"POT-Creation-Date: 2019-05-06 15:00+0400\n"
+"PO-Revision-Date: 2019-05-06 15:00+0400\n"
 "Last-Translator: \n"
 "Language-Team: NikolayS93 <NikolayS93@yandex.ru>\n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.7\n"
+"X-Generator: Poedit 2.2.1\n"
 "X-Poedit-Basepath: ../.\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
@@ -19,3 +19,220 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: includes/classes\n"
 "X-Poedit-SearchPathExcluded-1: languages\n"
 "X-Poedit-SearchPathExcluded-2: .git\n"
+
+#: admin/settings/terms-global.php:20
+msgid "Title:"
+msgstr ""
+
+#: admin/settings/terms-global.php:30
+msgid "taxonomy:"
+msgstr ""
+
+#: admin/settings/terms-global.php:39
+msgid "Blocks (div)"
+msgstr ""
+
+#: admin/settings/terms-global.php:40
+msgid "Unordered List (ul)"
+msgstr ""
+
+#: admin/settings/terms-global.php:41
+msgid "Ordered List (ol)"
+msgstr ""
+
+#: admin/settings/terms-global.php:43
+msgid "List Format:"
+msgstr ""
+
+#: admin/settings/terms-query.php:12 include/Utils.php:64
+msgid "ID"
+msgstr ""
+
+#: admin/settings/terms-query.php:13
+msgid "Category Name"
+msgstr ""
+
+#: admin/settings/terms-query.php:14
+msgid "Post Count"
+msgstr ""
+
+#: admin/settings/terms-query.php:16
+msgid "Order by:"
+msgstr ""
+
+#: admin/settings/terms-query.php:25
+msgid "Descending"
+msgstr ""
+
+#: admin/settings/terms-query.php:26
+msgid "Ascending"
+msgstr ""
+
+#: admin/settings/terms-query.php:28
+msgid "Order:"
+msgstr ""
+
+#: admin/settings/terms-query.php:36
+msgid "Show empty terms"
+msgstr ""
+
+#: admin/settings/terms-query.php:43
+msgid "Max terms:"
+msgstr ""
+
+#: admin/settings/terms-template.php:17
+msgid "Display Widget Title"
+msgstr ""
+
+#: admin/settings/terms-template.php:24
+msgid "Hierarchical"
+msgstr ""
+
+#: admin/settings/terms-template.php:31
+msgid "Display Post Count"
+msgstr ""
+
+#: admin/settings/terms-template.php:38
+msgid "Display Term Description"
+msgstr ""
+
+#: admin/settings/terms-template.php:45
+msgid "Excerpt Length:"
+msgstr ""
+
+#: admin/settings/terms-template.php:58
+msgid "Preview:"
+msgstr ""
+
+#: admin/settings/terms-thumbnail.php:11
+msgid "Display Thumbnail"
+msgstr ""
+
+#: admin/settings/terms-thumbnail.php:21
+msgid "Custom sizes:"
+msgstr ""
+
+#: admin/settings/terms-thumbnail.php:27
+msgid "Set Custom Size:"
+msgstr ""
+
+#: admin/settings/terms-thumbnail.php:36
+msgid "Width:"
+msgstr ""
+
+#: admin/settings/terms-thumbnail.php:46
+msgid "Height:"
+msgstr ""
+
+#: admin/settings/terms-thumbnail.php:53
+msgid "Preview Custom Size:"
+msgstr ""
+
+#: include/PostsWidget.php:17
+msgid "Simple Posts Queries"
+msgstr ""
+
+#: include/PostsWidget.php:45 include/TermsWidget.php:45
+#, php-format
+msgid "%s"
+msgstr ""
+
+#: include/TermsPublic.php:61
+msgid "Terms"
+msgstr ""
+
+#: include/TermsWidget.php:17
+msgid "Simple Terms Queries"
+msgstr ""
+
+#: include/Utils.php:33
+msgid "Published"
+msgstr ""
+
+#: include/Utils.php:37
+msgid "Scheduled"
+msgstr ""
+
+#: include/Utils.php:41
+msgid "За все время"
+msgstr ""
+
+#: include/Utils.php:45
+msgid "Any"
+msgstr ""
+
+#: include/Utils.php:60
+msgid "None"
+msgstr ""
+
+#: include/Utils.php:68
+msgid "Author"
+msgstr ""
+
+#: include/Utils.php:72
+msgid "Title"
+msgstr ""
+
+#: include/Utils.php:76
+msgid "Name"
+msgstr ""
+
+#: include/Utils.php:80
+msgid "Type"
+msgstr ""
+
+#: include/Utils.php:84
+msgid "Date"
+msgstr ""
+
+#: include/Utils.php:88
+msgid "Modified"
+msgstr ""
+
+#: include/Utils.php:92
+msgid "Parent"
+msgstr ""
+
+#: include/Utils.php:96
+msgid "Random"
+msgstr ""
+
+#: include/Utils.php:100
+msgid "Comment"
+msgstr ""
+
+#: include/Utils.php:104
+msgid "Relevance"
+msgstr ""
+
+#: include/Utils.php:108
+msgid "Menu"
+msgstr ""
+
+#: include/_lang.php:7
+msgid "New plugin"
+msgstr "Новый плагин"
+
+#: include/_lang.php:8
+msgid "New plugin boilerplate"
+msgstr "Фундамент нового плагина"
+
+#: index.php:87
+msgid "New Plugin name Title"
+msgstr "Название нового плагина"
+
+#: index.php:89
+msgid "Example"
+msgstr ""
+
+#: index.php:103
+msgid "Section"
+msgstr ""
+
+#: index.php:111
+msgid "metabox"
+msgstr ""
+
+#: vendor/NikolayS93/wp-admin-form/src/templates/select.php:8
+msgid "Choose an option"
+msgstr ""
