@@ -169,7 +169,7 @@ class TermsPublic // extends Shortcode
             $level
         );
 
-        do_action('TermsPublic::after_start_list', $level);
+        do_action('TermsPublic::after_start_list', $instance, $level);
 
 
         /**
