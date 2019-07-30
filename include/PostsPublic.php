@@ -49,19 +49,15 @@ class PostsPublic // extends Shortcode
         return $defaults;
     }
 
-    function sanitizeShortcodeAtts( $atts )
+    private function sanitizeShortcodeAtts( $atts )
     {
         if( !empty($atts['parent']) ) {
-            /**
-             * Multiple parent
-             */
+            // Multiple parent
             if( is_array($atts['parent']) ) {
                 $atts['parent'] = explode(',', $atts['parent']);
             }
 
-            /**
-             * Current parrent
-             */
+            // Current parrent
             elseif( in_array($atts['parent'], array('this', '(this)', '$this')) ) {
                 $atts['parent'] = array( get_the_id() );
             }
@@ -91,8 +87,10 @@ class PostsPublic // extends Shortcode
         return $atts;
     }
 
-    function sanitizeQueryArgs()
+    private function sanitizeQueryArgs()
     {
+        $paged = get_query_var( 'paged' ) ? intval( get_query_var( 'paged' ) ) : 1;
+
         $args = array(
             'p'               => $this->atts['id'],
             'cat'             => $this->atts['cat'],
@@ -103,6 +101,7 @@ class PostsPublic // extends Shortcode
             'order'           => $this->atts['order'],
             'orderby'         => $this->atts['orderby'],
             'post_status'     => $this->atts['status'],
+            'paged'           => $paged,
         );
 
         if( $this->atts['terms'] ) {
@@ -125,9 +124,6 @@ class PostsPublic // extends Shortcode
         return $args;
     }
 
-    /**
-     * Starts from here ;D
-     */
     function shortcode( $atts = array() )
     {
         /**
@@ -157,13 +153,20 @@ class PostsPublic // extends Shortcode
         return $result;
     }
 
+    static function pagination()
+    {
+    }
+
     /******************************* Build DOM ********************************/
 
     function executeQuery( $args )
     {
+        global $lastPostsTotal;
+
         ob_start();
 
-        $Query = new \WP_Query($args);
+        $query = new \WP_Query($args);
+        $lastPostsTotal = $query->max_num_pages;
 
         if ( $query->have_posts() ) {
 
@@ -205,7 +208,6 @@ class PostsPublic // extends Shortcode
     private function getQueriedTemplate( $template, $slug = false, $template_args = array() )
     {
         extract($template_args);
-
 
         if( $slug ) {
             if( 'product' === $this->atts['type'] ) {
@@ -337,5 +339,46 @@ class PostsPublic // extends Shortcode
     protected function getOriginalQueryVars()
     {
         return $this->originalQueryVars;
+    }
+
+    /********************************* TinyMCE ********************************/
+    static function init_mce_plugin() {
+        if ( !current_user_can('edit_posts') && !current_user_can('edit_pages') ) {
+            return;
+        }
+
+        add_filter("mce_external_plugins", function( $plugin_array ) {
+            $plugin_array['query_shortcode'] = Utils::get_plugin_url( '/admin/assets/posts-query-button.js' );
+            return $plugin_array;
+        });
+
+        add_filter("mce_buttons", function( $buttons ) {
+            $buttons[] = 'query_shortcode';
+            return $buttons;
+        });
+    }
+
+    static function enqueue_mce_script()
+    {
+        if ( ! isset( get_current_screen()->id ) || get_current_screen()->base != 'post' ) {
+            return;
+        }
+
+        wp_enqueue_script( 'query_shortcode', Utils::get_plugin_url('/admin/assets/posts-query-shortcode.js'),
+            array( 'shortcode', 'wp-util', 'jquery' ), false, true );
+        wp_localize_script( 'query_shortcode',
+            'queryPosts',
+            array(
+                'nonce'     => '',
+                'shortcode' => self::__shortcodeName(),
+                'types'     => Utils::get_post_type_list(),
+                'categories' => '',
+                'pages' => '',
+                'taxonomies' => '',
+                'terms' => '',
+                'statuses'  => Utils::get_status_list(),
+                'orderby'   => Utils::get_order_by_postlist(),
+            )
+        );
     }
 }

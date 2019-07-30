@@ -3,7 +3,7 @@
     tinymce.PluginManager.add('query_shortcode', function( editor, url ) {
         editor.addButton( 'query_shortcode', {
             type: 'menubutton',
-            text: '{Query}',
+            text: '{Query Posts}',
             // onclick: function() {
             //     wp.mce.query_shortcode.popupwindow(editor, null, 'post_type');
             // }

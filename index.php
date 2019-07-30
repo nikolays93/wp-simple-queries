@@ -1,10 +1,10 @@
 <?php
 
 /*
- * Plugin Name: WP Simple Queries Shortcode and Widget
+ * Plugin Name: Queries Shortcodes and Widgets
  * Plugin URI: https://github.com/nikolays93
  * Description:
- * Version: 0.1.3
+ * Version: 0.2.0
  * Author: NikolayS93
  * Author URI: https://vk.com/nikolays_93
  * Author EMAIL: NikolayS93@ya.ru
@@ -46,12 +46,60 @@ if(!defined(__NAMESPACE__ . '\DOMAIN')) define(__NAMESPACE__ . '\DOMAIN', Plugin
 add_shortcode( PostsPublic::__shortcodeName(), array(new PostsPublic(), 'shortcode') );
 add_shortcode( TermsPublic::__shortcodeName(), array(new TermsPublic(), 'shortcode') );
 
+add_shortcode( 'posts_pagination', function($args) {
+    global $lastPostsTotal;
+
+    $lastPostsTotal = $lastPostsTotal ? intval($lastPostsTotal) : 1;
+
+    $args = shortcode_atts( array(
+        'show_all'  => false,
+        'end_size'  => 1,
+        'mid_size'  => 1,
+        'prev_next' => true,
+        'prev_text' => '« Пред.',
+        'next_text' => 'След. »',
+        'add_args'  => false,
+        'total'     => $lastPostsTotal
+    ), $args, 'posts_pagination' );
+
+    /**
+     * get_the_posts_pagination() wp-include/link-template.php:2656
+     */
+    $navigation = '';
+
+    // Don't print empty markup if there's only one page.
+    if ( $lastPostsTotal > 1 ) {
+        $args = wp_parse_args(
+            $args,
+            array(
+                'mid_size'           => 1,
+                'prev_text'          => _x( 'Previous', 'previous set of posts' ),
+                'next_text'          => _x( 'Next', 'next set of posts' ),
+                'screen_reader_text' => __( 'Posts navigation' ),
+            )
+        );
+
+        // Make sure we get a string back. Plain is the next best thing.
+        if ( isset( $args['type'] ) && 'array' == $args['type'] ) {
+            $args['type'] = 'plain';
+        }
+
+        // Set up paginated links.
+        $links = paginate_links( $args );
+
+        if ( $links ) {
+            $navigation = _navigation_markup( $links, 'pagination', $args['screen_reader_text'] );
+        }
+    }
+
+    return $navigation;
+} );
 
 /**
  * Set to enqueue TiniMCE plugins
  */
-// add_action( 'admin_init', array( __NAMESPACE__ . '\Posts_MCE', 'init_mce_plugin' ), 20 );
-// add_action( 'admin_head', array( __NAMESPACE__ . '\Posts_MCE', 'enqueue_mce_script' ));
+add_action( 'admin_init', array( __NAMESPACE__ . '\PostsPublic', 'init_mce_plugin' ), 20 );
+add_action( 'admin_head', array( __NAMESPACE__ . '\PostsPublic', 'enqueue_mce_script' ));
 
 /**
  * Register widget's sltyles

@@ -1,5 +1,5 @@
 /* global tinyMCE */
-(function($){
+(function() {
     // defaults
     var templateOpts = {
         wrap_tag: "",
@@ -248,5 +248,5 @@
 
     wp.mce.views.register( shortcode_string, wp.mce.query_shortcode );
 
-}(jQuery));
+}());
 
