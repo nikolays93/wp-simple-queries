@@ -1,6 +1,6 @@
 <?php
 
-namespace NikolayS93\Queries\Types;
+namespace NikolayS93\Queries\Creational;
 
 if ( ! defined( 'ABSPATH' ) )
     exit; // disable direct access
@@ -13,26 +13,28 @@ abstract class Shortcode
     protected $atts = array();
 
     /**
-     * @return array Shortcode atts default properties for escape waste
-     */
-    abstract function __defaults();
-
-    /**
      * @return string Get shortcode name default + filter
      */
-    abstract static function __shortcodeName();
+    abstract function get_name();
+
+    /**
+     * @return array Shortcode atts default properties for escape waste
+     */
+    abstract function get_defaults();
 
     /**
      * Fix typos, fix var's types, fix them appropriately
+     *
      * @param  array $atts
      * @return ...
      */
-    abstract function sanitizeShortcodeAtts( $atts );
+    abstract function sanitize_attrs( $atts );
 
     /**
      * Register shortcode function
+     *
      * @param  array  $atts     [description]
      * @return [type]           [description]
      */
-    abstract function shortcode( $atts = array() );
+    abstract function build( $atts = array() );
 }

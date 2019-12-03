@@ -6,7 +6,7 @@
  * @package Newproject.WordPress.plugin
  */
 
-namespace NikolayS93\PluginName\Creational;
+namespace NikolayS93\Queries\Creational;
 
 use ReflectionClass;
 use ReflectionException;

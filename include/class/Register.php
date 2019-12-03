@@ -5,7 +5,7 @@
  * @package Newproject.WordPress.plugin
  */
 
-namespace NikolayS93\PluginName;
+namespace NikolayS93\Queries;
 
 use NikolayS93\WPAdminPage\Page;
 use NikolayS93\WPAdminPage\Section;

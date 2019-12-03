@@ -5,9 +5,9 @@
  * @package Newproject.WordPress.plugin
  */
 
-namespace NikolayS93\PluginName;
+namespace NikolayS93\Queries;
 
-use NikolayS93\PluginName\Creational\Singleton;
+use NikolayS93\Queries\Creational\Singleton;
 
 /**
  * Class Plugin
@@ -19,12 +19,12 @@ class Plugin {
 	/**
 	 * Uniq plugin slug name.
 	 */
-	const DOMAIN = 'plugin';
+	const DOMAIN = 'queries';
 
 	/**
 	 * Uniq plugin prefix.
 	 */
-	const PREFIX = 'plugin_';
+	const PREFIX = 'sq_';
 
 	/**
 	 * The capability required to use this plugin.

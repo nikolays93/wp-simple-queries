@@ -5,5 +5,5 @@
  * @package Newproject.WordPress.plugin
  */
 
-__( 'New plugin' );
+__( 'Post\'s and Term\'s queries (Shortcode and Widget)' );
 __( 'New plugin boilerplate' );
