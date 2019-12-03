@@ -1,10 +1,9 @@
 <?php
-
-/*
- * Plugin Name: Queries Shortcodes and Widgets
+/**
+ * Plugin Name: Post's and Term's queries (Shortcode and Widget)
  * Plugin URI: https://github.com/nikolays93
  * Description:
- * Version: 0.2.0
+ * Version: 0.3
  * Author: NikolayS93
  * Author URI: https://vk.com/nikolays_93
  * Author EMAIL: NikolayS93@ya.ru
@@ -12,27 +11,71 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: queries
  * Domain Path: /languages/
+ *
+ * @package Newproject.WordPress.plugin
  */
 
 namespace NikolayS93\Queries;
 
-use NikolayS93\WPAdminPage as Admin;
-
-if ( !defined( 'ABSPATH' ) ) exit('You shall not pass');
-if (version_compare(PHP_VERSION, '5.4') < 0) {
-    throw new \Exception('Plugin requires PHP 5.4 or above');
+if ( ! defined( 'ABSPATH' ) ) {
+	exit( 'You shall not pass' );
 }
 
-if( !defined(__NAMESPACE__ . '\PLUGIN_DIR') ) define(__NAMESPACE__ . '\PLUGIN_DIR', __DIR__);
-if( !defined(__NAMESPACE__ . '\PLUGIN_FILE') ) define(__NAMESPACE__ . '\PLUGIN_FILE', __FILE__);
+if ( ! defined( __NAMESPACE__ . '\PLUGIN_DIR' ) ) {
+	define( __NAMESPACE__ . '\PLUGIN_DIR', dirname( __FILE__ ) . DIRECTORY_SEPARATOR );
+}
 
-require_once ABSPATH . "wp-admin/includes/plugin.php";
-require_once PLUGIN_DIR . '/vendor/autoload.php';
+if ( ! function_exists( 'include_plugin_file' ) ) {
+	/**
+	 * Safe dynamic expression include.
+	 *
+	 * @param string $path relative path.
+	 */
+	function include_plugin_file( $path ) {
+		if ( 0 !== strpos( $path, PLUGIN_DIR ) ) {
+			$path = PLUGIN_DIR . $path;
+		}
+		if ( is_file( $path ) && is_readable( $path ) ) {
+			return include $path; // phpcs:ignore
+		}
+
+		return false;
+	}
+}
+
+require_once ABSPATH . 'wp-admin/includes/plugin.php';
+if ( ! include_once PLUGIN_DIR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php' ) {
+	array_map(
+		__NAMESPACE__ . '\include_plugin_file',
+		array(
+			'include/class/Creational/Singleton.php',
+			'include/class/Plugin.php',
+			'include/class/Register.php',
+		)
+	);
+}
 
 /**
- * Uniq prefix
+ * Returns the single instance of this plugin, creating one if needed.
+ *
+ * @return Plugin
  */
-if(!defined(__NAMESPACE__ . '\DOMAIN')) define(__NAMESPACE__ . '\DOMAIN', Plugin::get_plugin_data('TextDomain'));
+function plugin() {
+	return Plugin::get_instance();
+}
+
+/**
+ * Initialize this plugin once all other plugins have finished loading.
+ */
+add_action( 'plugins_loaded', __NAMESPACE__ . '\Plugin', 10 );
+add_action(
+	'plugins_loaded',
+	function () {
+		$register = new Register();
+		$register->register_plugin_page();
+	},
+	20
+);
 
 /**
  * Register widgets
@@ -43,57 +86,8 @@ if(!defined(__NAMESPACE__ . '\DOMAIN')) define(__NAMESPACE__ . '\DOMAIN', Plugin
 /**
  * Register shortcodes
  */
-add_shortcode( PostsPublic::__shortcodeName(), array(new PostsPublic(), 'shortcode') );
-add_shortcode( TermsPublic::__shortcodeName(), array(new TermsPublic(), 'shortcode') );
-
-add_shortcode( 'posts_pagination', function($args) {
-    global $lastPostsTotal;
-
-    $lastPostsTotal = $lastPostsTotal ? intval($lastPostsTotal) : 1;
-
-    $args = shortcode_atts( array(
-        'show_all'  => false,
-        'end_size'  => 1,
-        'mid_size'  => 1,
-        'prev_next' => true,
-        'prev_text' => '« Пред.',
-        'next_text' => 'След. »',
-        'add_args'  => false,
-        'total'     => $lastPostsTotal
-    ), $args, 'posts_pagination' );
-
-    /**
-     * get_the_posts_pagination() wp-include/link-template.php:2656
-     */
-    $navigation = '';
-
-    // Don't print empty markup if there's only one page.
-    if ( $lastPostsTotal > 1 ) {
-        $args = wp_parse_args(
-            $args,
-            array(
-                'mid_size'           => 1,
-                'prev_text'          => _x( 'Previous', 'previous set of posts' ),
-                'next_text'          => _x( 'Next', 'next set of posts' ),
-                'screen_reader_text' => __( 'Posts navigation' ),
-            )
-        );
-
-        // Make sure we get a string back. Plain is the next best thing.
-        if ( isset( $args['type'] ) && 'array' == $args['type'] ) {
-            $args['type'] = 'plain';
-        }
-
-        // Set up paginated links.
-        $links = paginate_links( $args );
-
-        if ( $links ) {
-            $navigation = _navigation_markup( $links, 'pagination', $args['screen_reader_text'] );
-        }
-    }
-
-    return $navigation;
-} );
+// add_shortcode( PostsPublic::__shortcodeName(), array(new PostsPublic(), 'shortcode') );
+// add_shortcode( TermsPublic::__shortcodeName(), array(new TermsPublic(), 'shortcode') );
 
 /**
  * Set to enqueue TiniMCE plugins
@@ -125,48 +119,55 @@ add_action( 'admin_head', array( __NAMESPACE__ . '\PostsPublic', 'enqueue_mce_sc
 //     };
 // }
 
-/**
- * Do not.. Set admin menu page with base settings
- */
-// add_action( 'plugins_loaded', __NAMESPACE__ . '\__init', 10 );
-function __init() {
+add_shortcode( 'posts_pagination', function($args) {
+	global $lastPostsTotal;
 
-    /** @var Admin\Page */
-    $Page = new Admin\Page( Plugin::get_option_name(), __('New Plugin name Title', DOMAIN), array(
-        'parent'      => '', // woocommerce
-        'menu' => __('Example', DOMAIN),
-        // 'validate'    => array($this, 'validate_options'),
-        'permissions' => 'manage_options',
-        'columns'     => 2,
-    ) );
+	$lastPostsTotal = $lastPostsTotal ? intval($lastPostsTotal) : 1;
 
-    // $Page->set_assets( function() {} );
+	$args = shortcode_atts( array(
+		'show_all'  => false,
+		'end_size'  => 1,
+		'mid_size'  => 1,
+		'prev_next' => true,
+		'prev_text' => '« Пред.',
+		'next_text' => 'След. »',
+		'add_args'  => false,
+		'total'     => $lastPostsTotal
+	), $args, 'posts_pagination' );
 
-    $Page->set_content( function() {
-        Plugin::get_admin_template('menu-page', false, $inc = true);
-    } );
+	/**
+	 * get_the_posts_pagination() wp-include/link-template.php:2656
+	 */
+	$navigation = '';
 
-    $Page->add_section( new Admin\Section(
-        'Section',
-        __('Section'),
-        function() {
-            Plugin::get_admin_template('section', false, $inc = true);
-        }
-    ) );
+	// Don't print empty markup if there's only one page.
+	if ( $lastPostsTotal > 1 ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'mid_size'           => 1,
+				'prev_text'          => _x( 'Previous', 'previous set of posts' ),
+				'next_text'          => _x( 'Next', 'next set of posts' ),
+				'screen_reader_text' => __( 'Posts navigation' ),
+			)
+		);
 
-    $metabox = new Admin\Metabox(
-        'metabox',
-        __('metabox', DOMAIN),
-        function() {
-            Plugin::get_admin_template('metabox', false, $inc = true);
-        },
-        $position = 'side',
-        $priority = 'high'
-    );
+		// Make sure we get a string back. Plain is the next best thing.
+		if ( isset( $args['type'] ) && 'array' == $args['type'] ) {
+			$args['type'] = 'plain';
+		}
 
-    $Page->add_metabox( $metabox );
-}
+		// Set up paginated links.
+		$links = paginate_links( $args );
 
-// register_activation_hook( __FILE__, array( __NAMESPACE__ . '\Plugin', 'activate' ) );
-// register_uninstall_hook( __FILE__, array( __NAMESPACE__ . '\Plugin', 'uninstall' ) );
-// register_deactivation_hook( __FILE__, array( __NAMESPACE__ . '\Plugin', 'deactivate' ) );
+		if ( $links ) {
+			$navigation = _navigation_markup( $links, 'pagination', $args['screen_reader_text'] );
+		}
+	}
+
+	return $navigation;
+} );
+
+// register_activation_hook( __FILE__, array( __NAMESPACE__ . '\Register', 'activate' ) );
+// register_deactivation_hook( __FILE__, array( __NAMESPACE__ . '\Register', 'deactivate' ) );
+// register_uninstall_hook( __FILE__, array( __NAMESPACE__ . '\Register', 'uninstall' ) );
