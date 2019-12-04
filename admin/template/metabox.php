@@ -5,7 +5,7 @@
  * @package Newproject.WordPress.plugin
  */
 
-namespace NikolayS93\PluginName;
+namespace NikolayS93\Queries;
 
 use NikolayS93\WPAdminForm\Form as Form;
 
@@ -40,8 +40,10 @@ $data = array(
 $form = new Form( $data, $is_table = true );
 $form->display();
 
+$settings = Plugin()->get_setting( null, array() );
+
 array_walk(
-	Plugin()->get_setting( null, array() ),
+	$settings,
 	function ( $value, $key ) {
 		echo esc_html( "$key: $value\r\n" );
 	}

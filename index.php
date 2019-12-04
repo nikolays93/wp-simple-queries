@@ -35,8 +35,9 @@ if ( ! function_exists( 'include_plugin_file' ) ) {
 		if ( 0 !== strpos( $path, PLUGIN_DIR ) ) {
 			$path = PLUGIN_DIR . $path;
 		}
+
 		if ( is_file( $path ) && is_readable( $path ) ) {
-			return include $path; // phpcs:ignore
+			return require_once $path;
 		}
 
 		return false;
@@ -44,15 +45,18 @@ if ( ! function_exists( 'include_plugin_file' ) ) {
 }
 
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
-if ( ! include_once PLUGIN_DIR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php' ) {
+if( ! include_plugin_file( 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php' ) ) {
 	array_map(
 		__NAMESPACE__ . '\include_plugin_file',
 		array(
+			'vendor\NikolayS93\wp-admin-form\wp-admin-form.php',
+			'vendor\NikolayS93\wp-admin-page\init.php',
 			'include/class/Creational/Singleton.php',
 			'include/class/Creational/Shortcode.php',
 			'include/class/Plugin.php',
 			'include/class/Utils.php',
 			'include/class/Register.php',
+			'include/class/ShortcodePost.php',
 		)
 	);
 }

@@ -1,7 +1,7 @@
 {
   "autoload": {
     "psr-4": {
-      "NikolayS93\\PluginName\\": "include\\class"
+      "NikolayS93\\Queries\\": "include\\class"
     }
   },
   "require": {

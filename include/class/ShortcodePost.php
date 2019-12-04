@@ -22,11 +22,6 @@ class ShortcodePost extends Shortcode {
 	 */
 	private $is_custom_template = false;
 
-	/**
-	 * @var array
-	 */
-	private $atts;
-
 	public static function get_name() {
 		return apply_filters( Plugin::PREFIX . 'get_posts_shortcode_name', static::NAME );
 	}
@@ -52,7 +47,7 @@ class ShortcodePost extends Shortcode {
 		) );
 	}
 
-	private function sanitize_attrs( $atts, $defaults = array(), $shortcode_name = null ) {
+	protected function sanitize_attrs( $atts, $defaults = array(), $shortcode_name = null ) {
 		/** @var array Wordpress built in shortcode attributes */
 		$atts = shortcode_atts( $defaults, $atts, $shortcode_name );
 
@@ -103,7 +98,7 @@ class ShortcodePost extends Shortcode {
 		return $atts;
 	}
 
-	private function sanitize_query_args() {
+	protected function sanitize_query_args() {
 		$paged = get_query_var( 'paged' ) ? absint( get_query_var( 'paged' ) ) : 1;
 
 		$args = array(

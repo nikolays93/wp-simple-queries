@@ -6,17 +6,17 @@ abstract class Shortcode {
 	/**
 	 * @var array Sanitized shortcode atts
 	 */
-	protected $atts = array();
+	private $atts = array();
 
 	/**
 	 * @return string Get shortcode name default + filter
 	 */
-	abstract function get_name();
+	abstract public static function get_name();
 
 	/**
 	 * @return array Shortcode atts default properties for escape waste
 	 */
-	abstract function get_defaults();
+	abstract public static function get_defaults();
 
 	/**
 	 * Fix typos, fix var's types, fix them appropriately
@@ -25,7 +25,9 @@ abstract class Shortcode {
 	 *
 	 * @return ...
 	 */
-	abstract function sanitize_attrs( $atts );
+	abstract protected function sanitize_attrs( $atts );
+
+	abstract protected function sanitize_query_args();
 
 	/**
 	 * Register shortcode function
@@ -34,5 +36,5 @@ abstract class Shortcode {
 	 *
 	 * @return [type]           [description]
 	 */
-	abstract function build( $atts = array() );
+	abstract public function build( $atts = array() );
 }
