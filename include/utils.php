@@ -6,11 +6,11 @@ if ( ! defined( 'ABSPATH' ) ) { // disable direct access.
 	exit;
 }
 
-class Utils extends Plugin {
+if( ! function_exists( __NAMESPACE__ . '\get_post_type_list' ) ) {
 	/**
 	 * Получает типы записей для выбора пользователем (объекты для MCE)
 	 */
-	public static function get_post_type_list() {
+	function get_post_type_list() {
 		$post_types = get_post_types( array( 'public' => true ) );
 		$types      = array();
 		foreach ( $post_types as $value => $text ) {
@@ -22,11 +22,13 @@ class Utils extends Plugin {
 
 		return apply_filters( 'wp-queries-post-type-list', $types );
 	}
+}
 
+if( ! function_exists( __NAMESPACE__ . '\get_status_list' ) ) {
 	/**
 	 * Получает статусы записей для выбора пользователем (объекты для MCE)
 	 */
-	public static function get_status_list() {
+	function get_status_list() {
 		$statuses = array(
 			(object) array(
 				'text'  => __( 'Published' ),
@@ -48,11 +50,13 @@ class Utils extends Plugin {
 
 		return apply_filters( 'wp-queries-status-list', $statuses );
 	}
+}
 
+if( ! function_exists( __NAMESPACE__ . '\get_order_by_postlist' ) ) {
 	/**
 	 * Получает варианты сортировки для выбора пользователем (объекты для MCE)
 	 */
-	public static function get_order_by_postlist() {
+	function get_order_by_postlist() {
 		$order_by = array(
 			(object) array(
 				'text'  => __( 'None' ),
@@ -110,7 +114,9 @@ class Utils extends Plugin {
 
 		return apply_filters( 'wp-queries-order-by-postlist', $order_by );
 	}
+}
 
+if( ! function_exists( __NAMESPACE__ . '\sanitize_select_array' ) ) {
 	/**
 	 * Sanitize option values (escape html) and native wordpress sanitize keys.
 	 *
@@ -119,7 +125,7 @@ class Utils extends Plugin {
 	 *
 	 * @return Array   $options results
 	 */
-	public static function sanitize_select_array( $options, $sort = false ) {
+	function sanitize_select_array( $options, $sort = false ) {
 		$options = ( ! is_array( $options ) ) ? (array) $options : $options;
 
 		// Clean the values (since it can be filtered by other plugins)
@@ -138,7 +144,9 @@ class Utils extends Plugin {
 
 		return $options;
 	}
+}
 
+if( ! function_exists( __NAMESPACE__ . '\sort_terms_hierarchicaly' ) ) {
 	/**
 	 * Recursively sort an array of taxonomy terms hierarchically. Child categories will be
 	 * placed under a 'children' member of their parent term.
@@ -147,7 +155,7 @@ class Utils extends Plugin {
 	 * @param Array $into result array to put them in
 	 * @param integer $parentId the current parent ID to put them in
 	 */
-	static function sort_terms_hierarchicaly( Array &$cats, Array &$into, $parentId = 0 ) {
+	function sort_terms_hierarchicaly( Array &$cats, Array &$into, $parentId = 0 ) {
 		foreach ( $cats as $i => $cat ) {
 			if ( $cat->parent == $parentId ) {
 				$into[ $cat->term_id ] = $cat;
@@ -157,7 +165,7 @@ class Utils extends Plugin {
 
 		foreach ( $into as $topCat ) {
 			$topCat->children = array();
-			self::sort_terms_hierarchicaly( $cats, $topCat->children, $topCat->term_id );
+			sort_terms_hierarchicaly( $cats, $topCat->children, $topCat->term_id );
 		}
 	}
 }
