@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: Post's and Term's queries (Shortcode and Widget)
+ * Plugin Name: Post's and Term's queries (Shortcode and Widget in future)
  * Plugin URI: https://github.com/nikolays93
- * Description:
+ * Description: Shortcode works with classic edittor only (But we try to be better ;).
  * Version: 0.3
  * Author: NikolayS93
  * Author URI: https://vk.com/nikolays_93
@@ -45,6 +45,14 @@ if ( ! function_exists( 'include_plugin_file' ) ) {
 }
 
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+array_map(
+	__NAMESPACE__ . '\include_plugin_file',
+	array(
+		'include/utils.php',
+	)
+);
+
 if( ! include_plugin_file( 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php' ) ) {
 	array_map(
 		__NAMESPACE__ . '\include_plugin_file',
@@ -60,6 +68,8 @@ if( ! include_plugin_file( 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php' ) ) {
 		)
 	);
 }
+
+
 
 /**
  * Returns the single instance of this plugin, creating one if needed.
@@ -86,8 +96,8 @@ add_action(
 /**
  * Register shortcodes
  */
-add_shortcode( ShortcodePost::get_name(), array( new ShortcodePost(), 'execute' ) );
-// add_shortcode( TermsPublic::get_name(), array( new TermsPublic(), 'execute' ) );
+add_shortcode( ShortcodePost::get_name(), array( new ShortcodePost(), 'build' ) );
+// add_shortcode( TermsPublic::get_name(), array( new TermsPublic(), 'build' ) );
 
 add_shortcode( 'posts_pagination', array( __NAMESPACE__ . '\ShortcodePost', 'pagination' ) );
 

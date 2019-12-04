@@ -322,6 +322,8 @@ class ShortcodePost extends Shortcode {
 		if ( $this->is_row( $this->atts['container'] ) && 'ul' !== $this->atts['wrap_tag'] ) {
 			$result .= '<div class="row">';
 		}
+
+		return $result;
 	}
 
 	private function get_container_end( $classes = array() ) {
@@ -343,6 +345,8 @@ class ShortcodePost extends Shortcode {
 		if ( 'product' === $this->atts['type'] ) {
 			$result .= '</section>';
 		}
+
+		return $result;
 	}
 
 	/************************* WP_Query manipulations *************************/
@@ -375,12 +379,12 @@ class ShortcodePost extends Shortcode {
 
 	/********************************* TinyMCE ********************************/
 	static function init_mce_plugin() {
-		if ( ! current_user_can( 'edit_posts' ) && ! current_user_can( 'edit_pages' ) ) {
+		if ( ! current_user_can( 'edit_posts' ) || ! current_user_can( 'edit_pages' ) ) {
 			return;
 		}
 
 		add_filter( "mce_external_plugins", function ( $plugin_array ) {
-			$plugin_array['query_shortcode'] = Utils::get_plugin_url( '/admin/assets/posts-query-button.js' );
+			$plugin_array['query_shortcode'] = plugin()->get_url( '/admin/assets/posts-query-button.js' );
 
 			return $plugin_array;
 		} );
@@ -397,20 +401,20 @@ class ShortcodePost extends Shortcode {
 			return;
 		}
 
-		wp_enqueue_script( 'query_shortcode', Utils::get_plugin_url( '/admin/assets/posts-query-shortcode.js' ),
+		wp_enqueue_script( 'query_shortcode', plugin()->get_url( '/admin/assets/posts-query-shortcode.js' ),
 			array( 'shortcode', 'wp-util', 'jquery' ), false, true );
 		wp_localize_script( 'query_shortcode',
 			'queryPosts',
 			array(
 				'nonce'      => '',
-				'shortcode'  => self::__shortcodeName(),
-				'types'      => Utils::get_post_type_list(),
+				'shortcode'  => static::get_name(),
+				'types'      => get_post_type_list(),
 				'categories' => '',
 				'pages'      => '',
 				'taxonomies' => '',
 				'terms'      => '',
-				'statuses'   => Utils::get_status_list(),
-				'orderby'    => Utils::get_order_by_postlist(),
+				'statuses'   => get_status_list(),
+				'orderby'    => get_order_by_postlist(),
 			)
 		);
 	}
