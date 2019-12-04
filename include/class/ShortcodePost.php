@@ -415,6 +415,26 @@ class ShortcodePost extends Shortcode {
 				'terms'      => '',
 				'statuses'   => get_status_list(),
 				'orderby'    => get_order_by_postlist(),
+				'lang' => (object) array(
+					'wrap_tag'    => __( 'Wrapper the Tag', Plugin::DOMAIN ),
+					'container'   => __( 'Container', Plugin::DOMAIN ),
+					'columns'     => __( 'Columns', Plugin::DOMAIN ),
+					'template'    => __( 'Custom Template', Plugin::DOMAIN ),
+					'status'      => __( 'Post Status', Plugin::DOMAIN ),
+					'orderby'     => __( 'Order By', Plugin::DOMAIN ),
+					'order'       => __( 'Order', Plugin::DOMAIN ),
+					'order_asc'   => __( 'ASC', Plugin::DOMAIN ),
+					'order_desc'  => __( 'DESC', Plugin::DOMAIN ),
+					'max'         => __( 'Max Posts', Plugin::DOMAIN ),
+					'max_tooltip' => __( '(-1 = unlimitted)', Plugin::DOMAIN ),
+					'parent'      => __( 'Parent (for hierarchy)', Plugin::DOMAIN ),
+					'cat'         => __( 'Categories ID (for post)', Plugin::DOMAIN ),
+					'cat_slug'    => __( 'Category SLUG (for post)', Plugin::DOMAIN ),
+					'tax'         => __( 'Taxonomy', Plugin::DOMAIN ),
+					'terms'       => __( 'Terms of tax', Plugin::DOMAIN ),
+					'posts_id'    => __( 'Comma separated ID list', Plugin::DOMAIN ),
+					'type'        => __( 'Post type', Plugin::DOMAIN ),
+				),
 			)
 		);
 	}

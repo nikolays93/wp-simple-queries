@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: plugin\n"
-"POT-Creation-Date: 2019-05-06 15:00+0400\n"
-"PO-Revision-Date: 2019-05-06 15:00+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2019-12-04 11:18+0400\n"
+"PO-Revision-Date: 2019-12-04 11:23+0400\n"
+"Last-Translator: Nikolays93 <nikolays93@ya.ru>\n"
 "Language-Team: NikolayS93 <NikolayS93@yandex.ru>\n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
@@ -44,7 +44,7 @@ msgstr ""
 msgid "List Format:"
 msgstr ""
 
-#: admin/settings/terms-query.php:12 include/Utils.php:64
+#: admin/settings/terms-query.php:12 include/utils.php:66
 msgid "ID"
 msgstr ""
 
@@ -128,111 +128,196 @@ msgstr ""
 msgid "Preview Custom Size:"
 msgstr ""
 
-#: include/PostsWidget.php:17
+#: include/_WidgetPosts.php:17
 msgid "Simple Posts Queries"
 msgstr ""
 
-#: include/PostsWidget.php:45 include/TermsWidget.php:45
+#: include/_WidgetPosts.php:44 include/_WidgetTerms.php:44
 #, php-format
 msgid "%s"
 msgstr ""
 
-#: include/TermsPublic.php:61
-msgid "Terms"
-msgstr ""
-
-#: include/TermsWidget.php:17
+#: include/_WidgetTerms.php:17
 msgid "Simple Terms Queries"
 msgstr ""
 
-#: include/Utils.php:33
-msgid "Published"
+#: include/_directly-unused-lang.php:8
+msgid "Post's and Term's queries (Shortcode and Widget)"
 msgstr ""
 
-#: include/Utils.php:37
-msgid "Scheduled"
-msgstr ""
-
-#: include/Utils.php:41
-msgid "За все время"
-msgstr ""
-
-#: include/Utils.php:45
-msgid "Any"
-msgstr ""
-
-#: include/Utils.php:60
-msgid "None"
-msgstr ""
-
-#: include/Utils.php:68
-msgid "Author"
-msgstr ""
-
-#: include/Utils.php:72
-msgid "Title"
-msgstr ""
-
-#: include/Utils.php:76
-msgid "Name"
-msgstr ""
-
-#: include/Utils.php:80
-msgid "Type"
-msgstr ""
-
-#: include/Utils.php:84
-msgid "Date"
-msgstr ""
-
-#: include/Utils.php:88
-msgid "Modified"
-msgstr ""
-
-#: include/Utils.php:92
-msgid "Parent"
-msgstr ""
-
-#: include/Utils.php:96
-msgid "Random"
-msgstr ""
-
-#: include/Utils.php:100
-msgid "Comment"
-msgstr ""
-
-#: include/Utils.php:104
-msgid "Relevance"
-msgstr ""
-
-#: include/Utils.php:108
-msgid "Menu"
-msgstr ""
-
-#: include/_lang.php:7
-msgid "New plugin"
-msgstr "Новый плагин"
-
-#: include/_lang.php:8
+#: include/_directly-unused-lang.php:9
 msgid "New plugin boilerplate"
 msgstr "Фундамент нового плагина"
 
-#: index.php:87
+#: include/class/Register.php:47
 msgid "New Plugin name Title"
 msgstr "Название нового плагина"
 
-#: index.php:89
+#: include/class/Register.php:50
 msgid "Example"
 msgstr ""
 
-#: index.php:103
+#: include/class/Register.php:65
 msgid "Section"
 msgstr ""
 
-#: index.php:111
-msgid "metabox"
+#: include/class/Register.php:73
+msgid "MetaBox"
+msgstr ""
+
+#: include/class/ShortcodePost.php:228
+msgctxt "previous set of posts"
+msgid "Previous"
+msgstr ""
+
+#: include/class/ShortcodePost.php:229
+msgctxt "next set of posts"
+msgid "Next"
+msgstr ""
+
+#: include/class/ShortcodePost.php:230
+msgid "Posts navigation"
+msgstr ""
+
+#: include/class/ShortcodePost.php:419
+msgid "Wrapper the Tag"
+msgstr "Тэг обертки"
+
+#: include/class/ShortcodePost.php:420
+msgid "Container"
+msgstr "Контейнер"
+
+#: include/class/ShortcodePost.php:421
+msgid "Columns"
+msgstr "Столбцы"
+
+#: include/class/ShortcodePost.php:422
+msgid "Custom Template"
+msgstr "Необычный дизайн"
+
+#: include/class/ShortcodePost.php:423
+msgid "Post Status"
+msgstr "Статус записей"
+
+#: include/class/ShortcodePost.php:424
+msgid "Order By"
+msgstr "Сортировать по"
+
+#: include/class/ShortcodePost.php:425
+msgid "Order"
+msgstr "Сортировать"
+
+#: include/class/ShortcodePost.php:426
+msgid "ASC"
+msgstr "По возрастанию"
+
+#: include/class/ShortcodePost.php:427
+msgid "DESC"
+msgstr "По убыванию"
+
+#: include/class/ShortcodePost.php:428
+msgid "Max Posts"
+msgstr "Ограничить количество записей"
+
+#: include/class/ShortcodePost.php:429
+msgid "(-1 = unlimitted)"
+msgstr "(-1 = без ограничения)"
+
+#: include/class/ShortcodePost.php:430
+msgid "Parent (for hierarchy)"
+msgstr "Старшая страница (Родитель)"
+
+#: include/class/ShortcodePost.php:431
+msgid "Categories ID (for post)"
+msgstr "ID категорий (для записей)"
+
+#: include/class/ShortcodePost.php:432
+msgid "Category SLUG (for post)"
+msgstr "Slug категорий (для записей)"
+
+#: include/class/ShortcodePost.php:433
+msgid "Taxonomy"
+msgstr "Таксономия"
+
+#: include/class/ShortcodePost.php:434
+msgid "Terms of tax"
+msgstr "Термины таксономий"
+
+#: include/class/ShortcodePost.php:435
+msgid "Comma separated ID list"
+msgstr "ID записей через запятую"
+
+#: include/class/ShortcodePost.php:436
+msgid "Post type"
+msgstr "Тип записи"
+
+#: include/utils.php:34
+msgid "Published"
+msgstr "Опубликовано"
+
+#: include/utils.php:38
+msgid "Scheduled"
+msgstr "Запланированно"
+
+#: include/utils.php:42
+msgid "За все время"
+msgstr ""
+
+#: include/utils.php:46
+msgid "Any"
+msgstr ""
+
+#: include/utils.php:62
+msgid "None"
+msgstr ""
+
+#: include/utils.php:70
+msgid "Author"
+msgstr ""
+
+#: include/utils.php:74
+msgid "Title"
+msgstr ""
+
+#: include/utils.php:78
+msgid "Name"
+msgstr ""
+
+#: include/utils.php:82
+msgid "Type"
+msgstr ""
+
+#: include/utils.php:86
+msgid "Date"
+msgstr ""
+
+#: include/utils.php:90
+msgid "Modified"
+msgstr ""
+
+#: include/utils.php:94
+msgid "Parent"
+msgstr ""
+
+#: include/utils.php:98
+msgid "Random"
+msgstr ""
+
+#: include/utils.php:102
+msgid "Comment"
+msgstr ""
+
+#: include/utils.php:106
+msgid "Relevance"
+msgstr ""
+
+#: include/utils.php:110
+msgid "Menu"
 msgstr ""
 
 #: vendor/NikolayS93/wp-admin-form/src/templates/select.php:8
 msgid "Choose an option"
 msgstr ""
+
+#~ msgid "New plugin"
+#~ msgstr "Новый плагин"

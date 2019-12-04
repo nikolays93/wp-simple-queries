@@ -30,14 +30,14 @@
                     body: [{
                             type: 'textbox',
                             name: 'wrap_tag',
-                            label: 'Тэг контейнера', //'Tag Wrapper',
+                            label: queryPosts.lang.wrap_tag,
                             placeholder: 'div',
                             value: templateOpts.wrap_tag
                         },
                         {
                             type: 'textbox',
                             name: 'container',
-                            label: 'Класс контейнера', //'Container Class',
+                            label: queryPosts.lang.container,
                             placeholder: 'true|false|string',
                             value: templateOpts.container
                         },
@@ -45,13 +45,13 @@
                             type: 'textbox',
                             subtype: 'number',
                             name: 'columns',
-                            label: 'Столбцов', //'Columns',
+                            label: queryPosts.lang.columns,
                             value: templateOpts.columns || 4
                         },
                         {
                             type: 'textbox',
                             name: 'template',
-                            label: 'Необычный дизайн', //'Custom Template',
+                            label: queryPosts.lang.template,
                             value: templateOpts.template
                         },
                     ],
@@ -73,27 +73,27 @@
                     body: [{
                             type: 'listbox',
                             name: 'status',
-                            label: 'Статус записей', //'Post Status',
+                            label: queryPosts.lang.status,
                             values: queryPosts.statuses,
                             value: advancedOpts.status
                         },
                         {
                             type: 'listbox',
                             name: 'orderby',
-                            label: 'Сортировать по:', // 'Order By',
+                            label: queryPosts.lang.orderby,
                             values: queryPosts.orderby,
                             value: advancedOpts.orderby || 'menu_order date'
                         },
                         {
                             type: 'listbox',
                             name: 'order',
-                            label: 'Сортировать', //'Order',
+                            label: queryPosts.lang.order,
                             values: [{
-                                    text: 'По убыванию', //'DESC',
+                                    text: queryPosts.lang.order_desc,
                                     value: 'desc'
                                 },
                                 {
-                                    text: 'По возрастанию', //'ASC',
+                                    text: queryPosts.lang.order_asc,
                                     value: 'asc'
                                 },
                             ],
@@ -103,9 +103,8 @@
                             type: 'textbox',
                             subtype: 'number',
                             name: 'max',
-                            label: 'Ограничить количество записей', //'Max Posts',
-                            tooltip: '(-1 = без ограничения)',
-                            // placeholder: '5',
+                            label: queryPosts.lang.max,
+                            tooltip: queryPosts.lang.max_tooltip,
                             value: advancedOpts.max || -1
                         },
                     ],
@@ -120,7 +119,7 @@
     wp.mce.query_shortcode = {
         shortcode_data: {},
         getContent: function() {
-            // Контент внутри объекта
+            // Inner editor shortcode box content.
             return '<p style="text-align: center;">{Simple WP Post Query}</p>';
         },
         edit: function(data) {
@@ -137,7 +136,7 @@
                     body = [{
                         type: 'textbox',
                         name: 'parent',
-                        label: 'Старшая страница (Родитель)', //'Parent (for hierarchy)',
+                        label: queryPosts.lang.parent,
                         value: values.parent
                     }];
                     break;
@@ -146,14 +145,14 @@
                     body = [{
                             type: 'textbox',
                             name: 'cat',
-                            label: 'Categories ID (for post)',
+                            label: queryPosts.lang.cat,
                             placeholder: '6,12,18',
                             value: values.cat
                         },
                         {
                             type: 'textbox',
                             name: 'slug',
-                            label: 'Category SLUG (for post)',
+                            label: queryPosts.lang.cat_slug,
                             placeholder: 'articles',
                             value: values.slug
                         }
@@ -164,13 +163,13 @@
                     body = [{
                             type: 'textbox',
                             name: 'tax',
-                            label: 'Таксаномия', //'taxonomy',
+                            label: queryPosts.lang.tax,
                             value: values.tax
                         },
                         {
                             type: 'textbox',
                             name: 'terms',
-                            label: 'Термины таксаномий', //'Terms of tax',
+                            label: queryPosts.lang.terms,
                             value: values.terms
                         }
                     ];
@@ -180,7 +179,7 @@
                     body = [{
                         type: 'textbox',
                         name: 'id',
-                        label: 'ID записей через запятую',
+                        label: queryPosts.lang.posts_id,
                         placeholder: '8,10,32',
                         value: values.id
                     }];
@@ -191,7 +190,7 @@
                     body = [{
                         type: 'listbox',
                         name: 'type',
-                        label: 'Тип записи',
+                        label: queryPosts.lang.type,
                         values: queryPosts.types,
                         value: values.type,
                     }];
@@ -242,7 +241,7 @@
             body.push(getTemplateButton(editor));
             body.push(getAdvancedButton(editor));
             var main = editor.windowManager.open({
-                title: 'Simple WordPress Post Query',
+                title: 'WordPress Posts Query',
                 body: body,
                 onsubmit: onsubmit_callback
             });
