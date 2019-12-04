@@ -2,15 +2,15 @@
 
 namespace NikolayS93\Queries;
 
-if ( ! defined( 'ABSPATH' ) ) exit; // disable direct access
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} // disable direct access
 
-class PostsWidget extends \WP_Widget
-{
+class PostsWidget extends \WP_Widget {
 	/**
 	 * Set global widget options
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		$this->alt_option_name = 'simple-terms-queries-widget';
 		parent::__construct(
 			'st-queries-widget',               // $this->id_base
@@ -31,10 +31,9 @@ class PostsWidget extends \WP_Widget
 		register_widget( __CLASS__ );
 	}
 
-	public static function build_section_header( $title = 'Settings' )
-    {
-        ob_start();
-        ?>
+	public static function build_section_header( $title = 'Settings' ) {
+		ob_start();
+		?>
 
         <div class="widget-panel-section-top">
             <div class="widget-panel-top-action">
@@ -42,90 +41,89 @@ class PostsWidget extends \WP_Widget
             </div>
             <div class="widget-panel-section-title">
                 <h4 class="widget-panel-section-heading">
-                    <?php printf( __( '%s', 'advanced-categories-widget' ), $title ); ?>
+					<?php printf( __( '%s', 'advanced-categories-widget' ), $title ); ?>
                 </h4>
             </div>
         </div>
 
-        <?php
-        $header = ob_get_clean();
-        return $header;
-    }
+		<?php
+		$header = ob_get_clean();
+
+		return $header;
+	}
 
 	/**
 	 * @WordPress builtin
 	 * Admin widget form
 	 */
-	public function form( $instance )
-	{
+	public function form( $instance ) {
 		$instance = wp_parse_args( (array) $instance, self::_defaults() );
-		$active = array();
-		foreach ($instance as $key => $val) {
+		$active   = array();
+		foreach ( $instance as $key => $val ) {
 			$active[ $this->get_field_name( $key ) ] = $val;
 		}
 
 		$params = array(
-			'widget' => $this,
+			'widget'   => $this,
 			'instance' => $instance,
 		);
 
-		$global_data = Utils::get_settings( 'global.php', $params );
+		$global_data    = Utils::get_settings( 'global.php', $params );
 		$thumbnail_data = Utils::get_settings( 'thumbnail.php', $params );
-		$template_data = Utils::get_settings( 'template.php', $params );
-		$query_data = Utils::get_settings( 'query.php', $params );
-		$terms_data = Utils::get_settings( 'terms.php', array(
-			'widget' => $this,
+		$template_data  = Utils::get_settings( 'template.php', $params );
+		$query_data     = Utils::get_settings( 'query.php', $params );
+		$terms_data     = Utils::get_settings( 'terms.php', array(
+			'widget'   => $this,
 			'instance' => $instance,
-			'action' => 'exclude'
-			) );
+			'action'   => 'exclude'
+		) );
 
-		include( Utils::get_plugin_dir('includes') . '/widget-form.php' );
+		include( Utils::get_plugin_dir( 'includes' ) . '/widget-form.php' );
 	}
 
 	/**
 	 * @WordPress builtin
 	 * Public widget views
 	 */
-	public function widget( $args, $instance )
-	{
-		if ( ! isset( $args['widget_id'] ) )
+	public function widget( $args, $instance ) {
+		if ( ! isset( $args['widget_id'] ) ) {
 			$args['widget_id'] = $this->id;
+		}
 
-		$instance = wp_parse_args( (array) $instance, array_merge(self::_defaults(), array(
+		$instance = wp_parse_args( (array) $instance, array_merge( self::_defaults(), array(
 			'id_base'       => $this->id_base,
 			'widget_number' => $this->number,
 			'widget_id'     => $this->id,
 		) ) );
 
-		$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
+		$title      = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 		$categories = self::get_widget_categories( $instance );
 
-		Simple_Posts_Queries_Public::display_widget($this, $title, $categories, $instance, $args);
+		Simple_Posts_Queries_Public::display_widget( $this, $title, $categories, $instance, $args );
 	}
 
 	/**
 	 * @WordPress builtin
 	 * Validate
 	 */
-	public function update( $new_instance, $instance )
-	{
+	public function update( $new_instance, $instance ) {
 		$instance = (array) $instance;
-		$fields = array_merge(
-			Utils::get_settings( 'global.php',    array('widget' => $this, 'instance' => $instance) ),
-			Utils::get_settings( 'template.php',  array('widget' => $this, 'instance' => $instance) ),
-			Utils::get_settings( 'thumbnail.php', array('widget' => $this, 'instance' => $instance) ),
-			Utils::get_settings( 'query.php',     array('widget' => $this, 'instance' => $instance) )
+		$fields   = array_merge(
+			Utils::get_settings( 'global.php', array( 'widget' => $this, 'instance' => $instance ) ),
+			Utils::get_settings( 'template.php', array( 'widget' => $this, 'instance' => $instance ) ),
+			Utils::get_settings( 'thumbnail.php', array( 'widget' => $this, 'instance' => $instance ) ),
+			Utils::get_settings( 'query.php', array( 'widget' => $this, 'instance' => $instance ) )
 		);
 
 		// file_put_contents(__DIR__ . '/some.log', print_r($new_instance, 1));
 		$res = array();
-		foreach ($fields as $field) {
-			if( ! isset($field['field_id']) ) {
+		foreach ( $fields as $field ) {
+			if ( ! isset( $field['field_id'] ) ) {
 				continue;
 			}
 
 			$defaults = self::_defaults();
-			if( ! isset($new_instance[ $field['field_id'] ]) && isset($defaults[ $field['field_id'] ]) ) {
+			if ( ! isset( $new_instance[ $field['field_id'] ] ) && isset( $defaults[ $field['field_id'] ] ) ) {
 				$instance[ $field['field_id'] ] = $defaults[ $field['field_id'] ];
 				continue;
 			}
@@ -135,20 +133,21 @@ class PostsWidget extends \WP_Widget
 			// {
 			// }
 
-			switch ($field['type']) {
+			switch ( $field['type'] ) {
 				case 'checkbox':
-					$instance[ $field['field_id'] ] = ( isset($new_instance[ $field['field_id'] ]) ) ? 1 : 0;
+					$instance[ $field['field_id'] ] = ( isset( $new_instance[ $field['field_id'] ] ) ) ? 1 : 0;
 					break;
 
 				case 'number':
-					if( isset($new_instance[ $field['field_id'] ]) )
+					if ( isset( $new_instance[ $field['field_id'] ] ) ) {
 						$instance[ $field['field_id'] ] = intval( $new_instance[ $field['field_id'] ] );
+					}
 					break;
 
 				case 'select':
 				case 'text':
-				// default:
-					if( isset($new_instance[ $field['field_id'] ]) ) {
+					// default:
+					if ( isset( $new_instance[ $field['field_id'] ] ) ) {
 						$instance[ $field['field_id'] ] = sanitize_text_field( $new_instance[ $field['field_id'] ] );
 					}
 					break;
@@ -165,7 +164,7 @@ class PostsWidget extends \WP_Widget
 		// $instance['hide_title'] = absint( $new_instance['hide_title'] );
 
 		// taxonomies & filters
-		if( !empty( $new_instance['exclude'] ) && is_array( $new_instance['exclude'] ) ) {
+		if ( ! empty( $new_instance['exclude'] ) && is_array( $new_instance['exclude'] ) ) {
 			$instance['exclude'] = array_filter( array_map( 'absint', $new_instance['exclude'] ) );
 		}
 		// else {
@@ -195,7 +194,7 @@ class PostsWidget extends \WP_Widget
 
 		// styles & layout
 		// $instance['taxonomy'] = isset( $new_instance['taxonomy'] ) ?
-			// sanitize_text_field( $new_instance['taxonomy'] ) : 'category';
+		// sanitize_text_field( $new_instance['taxonomy'] ) : 'category';
 
 		// build out the instance for devs
 		$instance['id_base']       = $this->id_base;

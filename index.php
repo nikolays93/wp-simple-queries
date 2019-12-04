@@ -97,7 +97,7 @@ add_shortcode( 'posts_pagination', array( __NAMESPACE__ . '\ShortcodePost', 'pag
  * Set to enqueue TiniMCE plugins
  */
 add_action( 'admin_init', array( __NAMESPACE__ . '\ShortcodePost', 'init_mce_plugin' ), 20 );
-add_action( 'admin_head', array( __NAMESPACE__ . '\ShortcodePost', 'enqueue_mce_script' ));
+add_action( 'admin_head', array( __NAMESPACE__ . '\ShortcodePost', 'enqueue_mce_script' ) );
 
 /**
  * Register widget's sltyles
