@@ -3,19 +3,5 @@
     "psr-4": {
       "NikolayS93\\Queries\\": "include\\class"
     }
-  },
-  "require": {
-    "nikolays93/wp-admin-form": "dev-master",
-    "nikolays93/wp-admin-page": "dev-master"
-  },
-  "repositories": [
-    {
-      "type": "git",
-      "url": "https://github.com/nikolays93/wp-admin-form"
-    },
-    {
-      "type": "git",
-      "url": "https://github.com/nikolays93/wp-admin-page"
-    }
-  ]
+  }
 }

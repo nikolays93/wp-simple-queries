@@ -23,11 +23,11 @@ class ShortcodePost extends Shortcode {
 	private $is_custom_template = false;
 
 	public static function get_name() {
-		return apply_filters( Plugin::PREFIX . 'get_posts_shortcode_name', static::NAME );
+		return apply_filters( Plugin::prefix() . 'get_posts_shortcode_name', static::NAME );
 	}
 
 	public static function get_defaults() {
-		return apply_filters( Plugin::PREFIX . 'get_posts_shortcode_defaults', array(
+		return apply_filters( Plugin::prefix() . 'get_posts_shortcode_defaults', array(
 			'id'        => false,
 			'max'       => '4', /* count show */
 			'type'      => 'post', // page, product..
@@ -408,34 +408,138 @@ class ShortcodePost extends Shortcode {
 			array(
 				'nonce'      => '',
 				'shortcode'  => static::get_name(),
-				'types'      => get_post_type_list(),
+				'types'      => static::get_post_type_list(),
 				'categories' => '',
 				'pages'      => '',
 				'taxonomies' => '',
 				'terms'      => '',
-				'statuses'   => get_status_list(),
-				'orderby'    => get_order_by_postlist(),
+				'statuses'   => static::get_status_list(),
+				'orderby'    => static::get_order_by_postlist(),
 				'lang' => (object) array(
-					'wrap_tag'    => __( 'Wrapper the Tag', Plugin::DOMAIN ),
-					'container'   => __( 'Container', Plugin::DOMAIN ),
-					'columns'     => __( 'Columns', Plugin::DOMAIN ),
-					'template'    => __( 'Custom Template', Plugin::DOMAIN ),
-					'status'      => __( 'Post Status', Plugin::DOMAIN ),
-					'orderby'     => __( 'Order By', Plugin::DOMAIN ),
-					'order'       => __( 'Order', Plugin::DOMAIN ),
-					'order_asc'   => __( 'ASC', Plugin::DOMAIN ),
-					'order_desc'  => __( 'DESC', Plugin::DOMAIN ),
-					'max'         => __( 'Max Posts', Plugin::DOMAIN ),
-					'max_tooltip' => __( '(-1 = unlimitted)', Plugin::DOMAIN ),
-					'parent'      => __( 'Parent (for hierarchy)', Plugin::DOMAIN ),
-					'cat'         => __( 'Categories ID (for post)', Plugin::DOMAIN ),
-					'cat_slug'    => __( 'Category SLUG (for post)', Plugin::DOMAIN ),
-					'tax'         => __( 'Taxonomy', Plugin::DOMAIN ),
-					'terms'       => __( 'Terms of tax', Plugin::DOMAIN ),
-					'posts_id'    => __( 'Comma separated ID list', Plugin::DOMAIN ),
-					'type'        => __( 'Post type', Plugin::DOMAIN ),
+					'wrap_tag'    => __( 'Wrapper the Tag', DOMAIN ),
+					'container'   => __( 'Container', DOMAIN ),
+					'columns'     => __( 'Columns', DOMAIN ),
+					'template'    => __( 'Custom Template', DOMAIN ),
+					'status'      => __( 'Post Status', DOMAIN ),
+					'orderby'     => __( 'Order By', DOMAIN ),
+					'order'       => __( 'Order', DOMAIN ),
+					'order_asc'   => __( 'ASC', DOMAIN ),
+					'order_desc'  => __( 'DESC', DOMAIN ),
+					'max'         => __( 'Max Posts', DOMAIN ),
+					'max_tooltip' => __( '(-1 = unlimitted)', DOMAIN ),
+					'parent'      => __( 'Parent (for hierarchy)', DOMAIN ),
+					'cat'         => __( 'Categories ID (for post)', DOMAIN ),
+					'cat_slug'    => __( 'Category SLUG (for post)', DOMAIN ),
+					'tax'         => __( 'Taxonomy', DOMAIN ),
+					'terms'       => __( 'Terms of tax', DOMAIN ),
+					'posts_id'    => __( 'Comma separated ID list', DOMAIN ),
+					'type'        => __( 'Post type', DOMAIN ),
 				),
 			)
 		);
+	}
+
+	/**
+	 * Получает типы записей для выбора пользователем (объекты для MCE)
+	 */
+	public static function get_post_type_list() {
+		$post_types = get_post_types( array( 'public' => true ) );
+		$types      = array();
+		foreach ( $post_types as $value => $text ) {
+			$types[] = (object) array(
+				'value' => $value,
+				'text'  => __( ucfirst( $text ) )
+			);
+		}
+
+		return apply_filters( Plugin::prefix() . 'get_post_type_list', $types );
+	}
+
+	/**
+	 * Получает статусы записей для выбора пользователем (объекты для MCE)
+	 */
+	public static function get_status_list() {
+		$statuses = array(
+			(object) array(
+				'text'  => __( 'Published', DOMAIN ),
+				'value' => 'publish'
+			),
+			(object) array(
+				'text'  => __( 'Scheduled', DOMAIN ),
+				'value' => 'future'
+			),
+			(object) array(
+				'text'  => __( 'За все время', DOMAIN ),
+				'value' => 'alltime'
+			),
+			(object) array(
+				'text'  => __( 'Any', DOMAIN ),
+				'value' => 'any',
+			),
+		);
+
+		return apply_filters( Plugin::prefix() . 'get_status_list', $statuses );
+	}
+
+	/**
+	 * Получает варианты сортировки для выбора пользователем (объекты для MCE)
+	 */
+	public static function get_order_by_postlist() {
+		$order_by = array(
+			(object) array(
+				'text'  => __( 'None', DOMAIN ),
+				'value' => 'none'
+			),
+			(object) array(
+				'text'  => __( 'ID', DOMAIN ),
+				'value' => 'ID'
+			),
+			(object) array(
+				'text'  => __( 'Author', DOMAIN ),
+				'value' => 'author'
+			),
+			(object) array(
+				'text'  => __( 'Title', DOMAIN ),
+				'value' => 'title'
+			),
+			(object) array(
+				'text'  => __( 'Name', DOMAIN ),
+				'value' => 'name'
+			),
+			(object) array(
+				'text'  => __( 'Type', DOMAIN ),
+				'value' => 'type'
+			),
+			(object) array(
+				'text'  => __( 'Date', DOMAIN ),
+				'value' => 'date'
+			),
+			(object) array(
+				'text'  => __( 'Modified', DOMAIN ),
+				'value' => 'modified'
+			),
+			(object) array(
+				'text'  => __( 'Parent', DOMAIN ),
+				'value' => 'parent'
+			),
+			(object) array(
+				'text'  => __( 'Random', DOMAIN ),
+				'value' => 'rand'
+			),
+			(object) array(
+				'text'  => __( 'Comment', DOMAIN ),
+				'value' => 'comment_count'
+			),
+			(object) array(
+				'text'  => __( 'Relevance', DOMAIN ),
+				'value' => 'relevance'
+			),
+			(object) array(
+				'text'  => __( 'Menu', DOMAIN ),
+				'value' => 'menu_order date'
+			),
+		);
+
+		return apply_filters( Plugin::prefix() . 'get_order_by_postlist', $order_by );
 	}
 }

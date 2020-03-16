@@ -1,84 +1,82 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: plugin\n"
-"POT-Creation-Date: 2019-12-04 11:18+0400\n"
-"PO-Revision-Date: 2019-12-04 11:23+0400\n"
+"POT-Creation-Date: 2020-03-17 00:33+0400\n"
+"PO-Revision-Date: 2020-03-17 00:36+0400\n"
 "Last-Translator: Nikolays93 <nikolays93@ya.ru>\n"
 "Language-Team: NikolayS93 <NikolayS93@yandex.ru>\n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.3\n"
 "X-Poedit-Basepath: ../.\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Poedit-KeywordsList: __;__e;_n:1,2;_x:1,2c;_ex:1,2c\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPathExcluded-0: includes/classes\n"
-"X-Poedit-SearchPathExcluded-1: languages\n"
-"X-Poedit-SearchPathExcluded-2: .git\n"
+"X-Poedit-SearchPathExcluded-0: .git\n"
 
 #: admin/settings/terms-global.php:20
 msgid "Title:"
-msgstr ""
+msgstr "Заголовок:"
 
 #: admin/settings/terms-global.php:30
 msgid "taxonomy:"
-msgstr ""
+msgstr "Таксономия:"
 
 #: admin/settings/terms-global.php:39
 msgid "Blocks (div)"
-msgstr ""
+msgstr "Блоки (div)"
 
 #: admin/settings/terms-global.php:40
 msgid "Unordered List (ul)"
-msgstr ""
+msgstr "Не отсортированный список (ul)"
 
 #: admin/settings/terms-global.php:41
 msgid "Ordered List (ol)"
-msgstr ""
+msgstr "Отсортированный список (ol)"
 
 #: admin/settings/terms-global.php:43
 msgid "List Format:"
-msgstr ""
+msgstr "Формат списка:"
 
-#: admin/settings/terms-query.php:12 include/utils.php:66
+#: admin/settings/terms-query.php:12 include/class/ShortcodePost.php:494
 msgid "ID"
-msgstr ""
+msgstr "ИД"
 
 #: admin/settings/terms-query.php:13
 msgid "Category Name"
-msgstr ""
+msgstr "Имя категории"
 
 #: admin/settings/terms-query.php:14
 msgid "Post Count"
-msgstr ""
+msgstr "Количество записей"
 
 #: admin/settings/terms-query.php:16
 msgid "Order by:"
-msgstr ""
+msgstr "Сортировать по:"
 
 #: admin/settings/terms-query.php:25
 msgid "Descending"
-msgstr ""
+msgstr "По возрастанию"
 
 #: admin/settings/terms-query.php:26
 msgid "Ascending"
-msgstr ""
+msgstr "По убыванию"
 
 #: admin/settings/terms-query.php:28
 msgid "Order:"
-msgstr ""
+msgstr "Сортировать:"
 
 #: admin/settings/terms-query.php:36
 msgid "Show empty terms"
-msgstr ""
+msgstr "Показать пустые термины"
 
 #: admin/settings/terms-query.php:43
 msgid "Max terms:"
-msgstr ""
+msgstr "Макс. кол-во терминов:"
 
 #: admin/settings/terms-template.php:17
 msgid "Display Widget Title"
@@ -128,43 +126,6 @@ msgstr ""
 msgid "Preview Custom Size:"
 msgstr ""
 
-#: include/_WidgetPosts.php:17
-msgid "Simple Posts Queries"
-msgstr ""
-
-#: include/_WidgetPosts.php:44 include/_WidgetTerms.php:44
-#, php-format
-msgid "%s"
-msgstr ""
-
-#: include/_WidgetTerms.php:17
-msgid "Simple Terms Queries"
-msgstr ""
-
-#: include/_directly-unused-lang.php:8
-msgid "Post's and Term's queries (Shortcode and Widget)"
-msgstr ""
-
-#: include/_directly-unused-lang.php:9
-msgid "New plugin boilerplate"
-msgstr "Фундамент нового плагина"
-
-#: include/class/Register.php:47
-msgid "New Plugin name Title"
-msgstr "Название нового плагина"
-
-#: include/class/Register.php:50
-msgid "Example"
-msgstr ""
-
-#: include/class/Register.php:65
-msgid "Section"
-msgstr ""
-
-#: include/class/Register.php:73
-msgid "MetaBox"
-msgstr ""
-
 #: include/class/ShortcodePost.php:228
 msgctxt "previous set of posts"
 msgid "Previous"
@@ -209,11 +170,11 @@ msgstr "Сортировать"
 
 #: include/class/ShortcodePost.php:426
 msgid "ASC"
-msgstr "По возрастанию"
+msgstr "А-Я"
 
 #: include/class/ShortcodePost.php:427
 msgid "DESC"
-msgstr "По убыванию"
+msgstr "Я-А"
 
 #: include/class/ShortcodePost.php:428
 msgid "Max Posts"
@@ -251,73 +212,85 @@ msgstr "ID записей через запятую"
 msgid "Post type"
 msgstr "Тип записи"
 
-#: include/utils.php:34
+#: include/class/ShortcodePost.php:464
 msgid "Published"
 msgstr "Опубликовано"
 
-#: include/utils.php:38
+#: include/class/ShortcodePost.php:468
 msgid "Scheduled"
 msgstr "Запланированно"
 
-#: include/utils.php:42
+#: include/class/ShortcodePost.php:472
 msgid "За все время"
 msgstr ""
 
-#: include/utils.php:46
+#: include/class/ShortcodePost.php:476
 msgid "Any"
 msgstr ""
 
-#: include/utils.php:62
+#: include/class/ShortcodePost.php:490
 msgid "None"
 msgstr ""
 
-#: include/utils.php:70
+#: include/class/ShortcodePost.php:498
 msgid "Author"
 msgstr ""
 
-#: include/utils.php:74
+#: include/class/ShortcodePost.php:502
 msgid "Title"
 msgstr ""
 
-#: include/utils.php:78
+#: include/class/ShortcodePost.php:506
 msgid "Name"
 msgstr ""
 
-#: include/utils.php:82
+#: include/class/ShortcodePost.php:510
 msgid "Type"
 msgstr ""
 
-#: include/utils.php:86
+#: include/class/ShortcodePost.php:514
 msgid "Date"
 msgstr ""
 
-#: include/utils.php:90
+#: include/class/ShortcodePost.php:518
 msgid "Modified"
 msgstr ""
 
-#: include/utils.php:94
+#: include/class/ShortcodePost.php:522
 msgid "Parent"
 msgstr ""
 
-#: include/utils.php:98
+#: include/class/ShortcodePost.php:526
 msgid "Random"
 msgstr ""
 
-#: include/utils.php:102
+#: include/class/ShortcodePost.php:530
 msgid "Comment"
 msgstr ""
 
-#: include/utils.php:106
+#: include/class/ShortcodePost.php:534
 msgid "Relevance"
 msgstr ""
 
-#: include/utils.php:110
+#: include/class/ShortcodePost.php:538
 msgid "Menu"
 msgstr ""
 
-#: vendor/NikolayS93/wp-admin-form/src/templates/select.php:8
-msgid "Choose an option"
+#: languages/lang.php:8
+msgid "Post's and Term's queries"
+msgstr "Запрос записей и терминов"
+
+#: languages/lang.php:9
+msgid "Shortcode works with classic edittor only (But we try to be better ;)."
 msgstr ""
+"Шорткоды работают только с классическим редактором (Но мы стараемся быть "
+"лучше ;)"
+
+#~ msgid "New plugin boilerplate"
+#~ msgstr "Фундамент нового плагина"
+
+#~ msgid "New Plugin name Title"
+#~ msgstr "Название нового плагина"
 
 #~ msgid "New plugin"
 #~ msgstr "Новый плагин"

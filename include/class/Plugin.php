@@ -17,23 +17,22 @@ class Plugin {
 	use Singleton;
 
 	/**
-	 * Uniq plugin slug name.
-	 */
-	const DOMAIN = 'queries';
-
-	/**
-	 * Uniq plugin prefix.
-	 */
-	const PREFIX = 'sq_';
-
-	/**
 	 * The capability required to use this plugin.
 	 * Please don't change this directly.
-	 * Use the self::PREFIX . "get_permissions" filter instead.
+	 * Use the Plugin::prefix() . "get_permissions" filter instead.
 	 *
 	 * @var string
 	 */
 	private $permissions = 'manage_options';
+
+	/**
+	 * Get uniq plugin prefix by domain.
+	 *
+	 * @return string
+	 */
+	public static function prefix() {
+		return DOMAIN . '_';
+	}
 
 	/**
 	 * Get option name for a options in the WordPress database
@@ -43,9 +42,9 @@ class Plugin {
 	 * @return string
 	 */
 	public function get_option_name( $suffix = '' ) {
-		$option_name = $suffix ? self::PREFIX . $suffix : self::DOMAIN;
+		$option_name = $suffix ? Plugin::prefix() . $suffix : DOMAIN;
 
-		return apply_filters( self::PREFIX . 'get_option_name', $option_name, $suffix );
+		return apply_filters( Plugin::prefix() . 'get_option_name', $option_name, $suffix );
 	}
 
 	/**
@@ -54,7 +53,7 @@ class Plugin {
 	 * @return string
 	 */
 	public function get_permissions() {
-		return apply_filters( self::PREFIX . 'get_permissions', $this->permissions );
+		return apply_filters( Plugin::prefix() . 'get_permissions', $this->permissions );
 	}
 
 	/**
@@ -90,7 +89,7 @@ class Plugin {
 	public function get_url( $path = '' ) {
 		$url = plugins_url( basename( $this->get_dir() ) ) . '/' . ltrim( $path, '/' );
 
-		return apply_filters( self::PREFIX . 'get_url', $url, $path );
+		return apply_filters( Plugin::prefix() . 'get_url', $url, $path );
 	}
 
 
@@ -133,7 +132,7 @@ class Plugin {
 		 * @var mixed
 		 */
 		$option = apply_filters(
-			self::PREFIX . 'get_option',
+			Plugin::prefix() . 'get_option',
 			get_option( $option_name, $default )
 		);
 
@@ -174,7 +173,7 @@ class Plugin {
 			return update_option(
 				$this->get_option_name( $context ),
 				$option,
-				apply_filters( self::PREFIX . 'autoload', $autoload, $option, $context )
+				apply_filters( Plugin::prefix() . 'autoload', $autoload, $option, $context )
 			);
 		}
 
@@ -187,11 +186,11 @@ class Plugin {
 	public function constructor() {
 		// Allow people to change what capability is required to use this plugin.
 		$this->permissions = apply_filters(
-			self::PREFIX . 'permissions',
+			Plugin::prefix() . 'permissions',
 			$this->permissions
 		);
 
 		// load plugin languages.
-		load_plugin_textdomain( self::DOMAIN, false, basename( self::get_dir() ) . '/languages/' );
+		load_plugin_textdomain( DOMAIN, false, basename( self::get_dir() ) . '/languages/' );
 	}
 }
