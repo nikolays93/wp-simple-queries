@@ -29,21 +29,20 @@ class ShortcodePost extends Shortcode {
 	public static function get_defaults() {
 		return apply_filters( Plugin::prefix() . 'get_posts_shortcode_defaults', array(
 			'id'        => false,
-			'max'       => '4', /* count show */
-			'type'      => 'post', // page, product..
-			'cat'       => '', /* category ID */
-			'slug'      => '', // category slug
-			'parent'    => '',
-			'status'    => 'publish', // publish, future, alltime (publish+future)
-			'order'     => 'DESC', // ASC || DESC
-			'orderby'   => 'menu_order date',
-			'wrap_tag'  => 'div',
-			'container' => 'container-fluid', // true=container, false=noDivContainer, string=custom container
-			'tax'       => false,
-			'terms'     => false,
-			// template attrs
-			'columns'   => '4', // 1 | 2 | 3 | 4 | 10 | 12
-			'template'  => '', // for custom template
+			'max'       => '4', // Max posts to show in a page.
+			'type'      => 'post', // Post type: page, product.
+			'cat'       => '', // Category ID.
+			'slug'      => '', // Category Slug.
+			'parent'    => '', // Get child of Parent.
+			'status'    => 'publish', // Post status: publish, future, alltime (publish and future included).
+			'order'     => 'DESC', // ASC || DESC.
+			'orderby'   => 'menu_order date', // Order by (separate by space).
+			'tax'       => false, // Cusom taxonomy.
+			'terms'     => false, // Custom terms (category or product_cat detect) ID separate by comma.
+			'wrap_tag'  => 'div', // Container tag.
+			'container' => 'container-fluid', // true=container, false=noDivContainer, string=custom container.
+			'column'    => 'col', // Column element class.
+			'template'  => '', // For custom template.
 		) );
 	}
 
@@ -142,9 +141,7 @@ class ShortcodePost extends Shortcode {
 		// Required for pagination shortcode.
 		global $last_max_num_pages;
 
-		$defaults = static::get_defaults();
-
-		$this->atts = $this->sanitize_attrs( $atts, $defaults, static::get_name() );
+		$this->atts = $this->sanitize_attrs( $atts, static::get_defaults(), static::get_name() );
 
 		/**
 		 * Insert WP_Query variables
@@ -167,12 +164,22 @@ class ShortcodePost extends Shortcode {
 			while ( $query->have_posts() ) {
 				$query->the_post();
 
-				$tempalte_dir = apply_filters( 'wp-simple-query-template_dir', 'template-parts' );
-				$this->get_queried_template( $tempalte_dir . '/content', $this->atts['template'], array(
-					'post_type' => $args['post_type'],
-					'query'     => $args,
-					'columns'   => $this->atts['columns'],
-				) );
+				if( $this->atts['column'] ) {
+					printf('<div class="%s">', esc_attr( $this->atts['column'] ));
+				}
+
+				$this->get_queried_template(
+					apply_filters( Plugin::prefix() . 'template_dir', 'template-parts' ) . '/content',
+					$this->atts['template'],
+					array(
+						'post_type' => $args['post_type'],
+						'query'     => $args,
+					)
+				);
+
+				if( $this->atts['column'] ) {
+					echo '</div>';
+				}
 			}
 
 			echo $this->get_container_end( $container_classes );
@@ -186,7 +193,6 @@ class ShortcodePost extends Shortcode {
 				echo '<hr>';
 				echo "template: {$this->atts['template']}<br>";
 				echo "container: {$this->atts['container']}<br>";
-				echo "columns: {$this->atts['columns']}<br>";
 			}
 		}
 
@@ -418,7 +424,7 @@ class ShortcodePost extends Shortcode {
 				'lang' => (object) array(
 					'wrap_tag'    => __( 'Wrapper the Tag', DOMAIN ),
 					'container'   => __( 'Container', DOMAIN ),
-					'columns'     => __( 'Columns', DOMAIN ),
+					'column'      => __( 'Column', DOMAIN ),
 					'template'    => __( 'Custom Template', DOMAIN ),
 					'status'      => __( 'Post Status', DOMAIN ),
 					'orderby'     => __( 'Order By', DOMAIN ),

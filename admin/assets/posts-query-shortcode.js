@@ -4,7 +4,7 @@
     var templateOpts = {
         wrap_tag: "",
         container: "",
-        columns: 4,
+        column: 'col',
         template: ""
     };
 
@@ -43,10 +43,9 @@
                         },
                         {
                             type: 'textbox',
-                            subtype: 'number',
-                            name: 'columns',
-                            label: queryPosts.lang.columns,
-                            value: templateOpts.columns || 4
+                            name: 'column',
+                            label: queryPosts.lang.column,
+                            value: templateOpts.column || 4
                         },
                         {
                             type: 'textbox',
@@ -209,7 +208,7 @@
                         type: 'single',
                         attrs: {
                             type: e.data.type,
-                            columns: templateOpts.columns,
+                            column: templateOpts.column,
                             max: advancedOpts.max
                         }
                     };
